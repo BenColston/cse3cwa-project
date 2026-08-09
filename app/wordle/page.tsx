@@ -8,9 +8,8 @@ export default function WordlePage() {
     <>
       <PageIntro eyebrow="Wordle" title="Create a phoneme-based Wordle activity.">
         <p>
-          Teachers can preview a single target word built from phoneme symbols,
-          check the English equivalence, and generate a classroom-ready HTML
-          file.
+          Teachers can preview a single HCE corpus target, enter guesses with a
+          phoneme keyboard, and generate a classroom-ready HTML file.
         </p>
       </PageIntro>
 
@@ -20,8 +19,9 @@ export default function WordlePage() {
           <h2 className="text-2xl font-bold text-slate-950">Output settings</h2>
           <div className="mt-4 grid gap-4 text-sm text-slate-700">
             <p>
-              Difficulty is set to beginner and the generated file includes
-              hover hints for each phoneme token.
+              The generated file includes the target pattern, a selectable HCE
+              phoneme keyboard, hover hints, Wordle-style feedback, and the
+              English equivalence after a correct answer.
             </p>
             <DownloadButton
               filename="phoneme-wordle.html"

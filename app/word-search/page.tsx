@@ -11,9 +11,9 @@ export default function WordSearchPage() {
         title="Create a phoneme-recognition word search."
       >
         <p>
-          This builder uses a fixed set of five phoneme-based words for
-          Assessment 1 and previews the activity before downloading a standalone
-          HTML page.
+          This builder uses a fixed set of five HCE phoneme words for Assessment
+          1, generates a phoneme-token grid, and downloads a standalone HTML
+          activity.
         </p>
       </PageIntro>
 
@@ -23,8 +23,9 @@ export default function WordSearchPage() {
           <h2 className="text-2xl font-bold text-slate-950">Output settings</h2>
           <div className="mt-4 grid gap-4 text-sm text-slate-700">
             <p>
-              The generated file contains the grid, phoneme clues, and English
-              equivalences for teacher-guided classroom use.
+              The generated file contains editable phoneme word input, grid size
+              controls, puzzle generation, answer highlighting, and a phoneme
+              word list.
             </p>
             <DownloadButton
               filename="phoneme-word-search.html"

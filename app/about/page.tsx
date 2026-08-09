@@ -37,13 +37,14 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-slate-950">Scope</h2>
           <div className="mt-4 grid gap-4 text-slate-700 md:grid-cols-2">
             <p>
-              The Wordle tool uses one phoneme-based target word for the first
-              assessment stage. Later assessments can expand this into stored
-              word lists and dynamic generation.
+              The Wordle tool uses one HCE phoneme target word for the first
+              assessment stage. Its keyboard, cells, hover labels, and feedback
+              are separated into reusable data and UI components.
             </p>
             <p>
-              The Word Search tool uses a small fixed phoneme word list and
-              produces a standalone HTML activity that runs in a normal browser.
+              The Word Search tool uses a small fixed corpus word list and
+              produces a generated standalone HTML activity that runs in a
+              normal browser without a database.
             </p>
           </div>
         </div>

@@ -20,12 +20,12 @@ export default function Home() {
           {
             href: "/wordle",
             title: "Wordle Builder",
-            body: "Create a one-word phoneme Wordle activity with hover hints and answer feedback.",
+            body: "Create a one-word HCE phoneme Wordle activity with keyboard entry, hover hints, and answer feedback.",
           },
           {
             href: "/word-search",
             title: "Word Search Builder",
-            body: "Preview a fixed five-word phoneme word search designed for recognition practice.",
+            body: "Generate a five-word phoneme-token word search designed for recognition practice.",
           },
           {
             href: "/about",
