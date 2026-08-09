@@ -29,7 +29,7 @@ export default function AboutPage() {
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-2xl font-bold text-slate-950">Video explanation</h2>
           <div className="mt-4 grid min-h-56 place-items-center rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-600">
-            Add the short assessment video here before submission.
+            Placeholder for a video explanation.
           </div>
         </div>
 
