@@ -4,8 +4,39 @@ import { useMemo, useState } from "react";
 import { wordSearchWords } from "@/lib/activityData";
 import { createWordSearchPuzzle } from "@/lib/wordSearch";
 
+type Coord = {
+  row: number;
+  col: number;
+};
+
 function coordKey(row: number, col: number) {
   return `${row}-${col}`;
+}
+
+function getPath(start: Coord, end: Coord): Coord[] {
+  const rowDelta = end.row - start.row;
+  const colDelta = end.col - start.col;
+  const isStraight =
+    rowDelta === 0 ||
+    colDelta === 0 ||
+    Math.abs(rowDelta) === Math.abs(colDelta);
+
+  if (!isStraight) {
+    return [];
+  }
+
+  const steps = Math.max(Math.abs(rowDelta), Math.abs(colDelta));
+  const rowStep = rowDelta === 0 ? 0 : rowDelta / steps;
+  const colStep = colDelta === 0 ? 0 : colDelta / steps;
+
+  return Array.from({ length: steps + 1 }, (_, index) => ({
+    row: start.row + rowStep * index,
+    col: start.col + colStep * index,
+  }));
+}
+
+function pathValue(grid: string[][], path: Coord[]) {
+  return path.map((coord) => grid[coord.row]?.[coord.col]).join("|");
 }
 
 export function WordSearchPreview() {
@@ -13,6 +44,10 @@ export function WordSearchPreview() {
   const [cols, setCols] = useState(8);
   const [version, setVersion] = useState(0);
   const [showAnswers, setShowAnswers] = useState(false);
+  const [selectionStart, setSelectionStart] = useState<Coord | null>(null);
+  const [selectedPath, setSelectedPath] = useState<Coord[]>([]);
+  const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [message, setMessage] = useState("Drag across the grid to find a phoneme sequence.");
 
   const puzzle = useMemo(
     () => createWordSearchPuzzle(wordSearchWords, rows, cols, version),
@@ -23,13 +58,77 @@ export function WordSearchPreview() {
       solution.coords.map((coord) => coordKey(coord.row, coord.col)),
     ),
   );
+  const selectedCells = new Set(
+    selectedPath.map((coord) => coordKey(coord.row, coord.col)),
+  );
+  const foundCells = new Set(
+    puzzle.solutions
+      .filter((solution) => foundWords.includes(solution.english))
+      .flatMap((solution) =>
+        solution.coords.map((coord) => coordKey(coord.row, coord.col)),
+      ),
+  );
 
   function updateRows(value: string) {
     setRows(Math.max(6, Math.min(12, Number(value) || 8)));
+    setFoundWords([]);
+    setSelectedPath([]);
   }
 
   function updateCols(value: string) {
     setCols(Math.max(6, Math.min(12, Number(value) || 8)));
+    setFoundWords([]);
+    setSelectedPath([]);
+  }
+
+  function regeneratePuzzle() {
+    setVersion((value) => value + 1);
+    setShowAnswers(false);
+    setFoundWords([]);
+    setSelectedPath([]);
+    setMessage("New puzzle generated. Drag across the grid to find a word.");
+  }
+
+  function startSelection(coord: Coord) {
+    setSelectionStart(coord);
+    setSelectedPath([coord]);
+  }
+
+  function extendSelection(coord: Coord) {
+    if (!selectionStart) {
+      return;
+    }
+
+    const path = getPath(selectionStart, coord);
+    if (path.length > 0) {
+      setSelectedPath(path);
+    }
+  }
+
+  function finishSelection() {
+    if (selectedPath.length === 0) {
+      setSelectionStart(null);
+      return;
+    }
+
+    const selected = pathValue(puzzle.grid, selectedPath);
+    const reversed = pathValue(puzzle.grid, [...selectedPath].reverse());
+    const match = puzzle.solutions.find((solution) => {
+      const answer = solution.phonemes.join("|");
+      return answer === selected || answer === reversed;
+    });
+
+    if (match) {
+      setFoundWords((words) =>
+        words.includes(match.english) ? words : [...words, match.english],
+      );
+      setMessage(`Found ${match.english}: /${match.phonemes.join("/ /")}/`);
+    } else {
+      setMessage("No match yet. Try a straight horizontal, vertical, or diagonal path.");
+    }
+
+    setSelectionStart(null);
+    setSelectedPath([]);
   }
 
   return (
@@ -73,7 +172,7 @@ export function WordSearchPreview() {
         </label>
         <button
           type="button"
-          onClick={() => setVersion((value) => value + 1)}
+          onClick={regeneratePuzzle}
           className="self-end rounded-md bg-teal-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-amber-300"
         >
           Generate
@@ -89,29 +188,55 @@ export function WordSearchPreview() {
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(280px,480px)_1fr]">
         <div
-          className="grid gap-1"
+          className="grid touch-none gap-1"
           style={{ gridTemplateColumns: `repeat(${cols}, minmax(34px, 1fr))` }}
           aria-label="Generated phoneme word search grid"
+          onPointerLeave={() => {
+            setSelectionStart(null);
+            setSelectedPath([]);
+          }}
+          onPointerUp={finishSelection}
+          onPointerCancel={() => {
+            setSelectionStart(null);
+            setSelectedPath([]);
+          }}
         >
           {puzzle.grid.map((row, rowIndex) =>
             row.map((phoneme, colIndex) => {
-              const isAnswer = showAnswers && answerCells.has(coordKey(rowIndex, colIndex));
+              const key = coordKey(rowIndex, colIndex);
+              const isAnswer = showAnswers && answerCells.has(key);
+              const isSelected = selectedCells.has(key);
+              const isFound = foundCells.has(key);
               return (
-                <span
+                <button
                   key={`${rowIndex}-${colIndex}`}
+                  type="button"
+                  onPointerDown={() => startSelection({ row: rowIndex, col: colIndex })}
+                  onPointerEnter={() => extendSelection({ row: rowIndex, col: colIndex })}
+                  onFocus={() => setMessage("Use pointer drag to select phoneme words in the grid.")}
                   className={`grid aspect-square place-items-center rounded border text-xs font-extrabold sm:text-sm ${
-                    isAnswer
+                    isFound
+                      ? "border-emerald-500 bg-emerald-100 text-emerald-950"
+                      : isSelected
+                        ? "border-amber-500 bg-amber-100 text-amber-950"
+                        : isAnswer
                       ? "border-teal-500 bg-teal-100 text-teal-950"
                       : "border-slate-300 bg-white text-slate-900"
                   }`}
                 >
                   {phoneme}
-                </span>
+                </button>
               );
             }),
           )}
         </div>
         <div>
+          <p
+            role="status"
+            className="rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700"
+          >
+            {message}
+          </p>
           <h3 className="text-sm font-bold uppercase tracking-wide text-slate-600">
             Word list
           </h3>
@@ -119,7 +244,11 @@ export function WordSearchPreview() {
             {wordSearchWords.map((word) => (
               <li
                 key={word.english}
-                className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700"
+                className={`rounded-md border px-3 py-2 text-sm ${
+                  foundWords.includes(word.english)
+                    ? "border-emerald-300 bg-emerald-50 text-emerald-900 line-through"
+                    : "border-slate-200 bg-slate-50 text-slate-700"
+                }`}
               >
                 <strong className="text-slate-950">
                   /{word.phonemes.join("/ /")}/
