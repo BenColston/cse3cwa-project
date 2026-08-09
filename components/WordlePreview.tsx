@@ -68,8 +68,15 @@ function KeyboardGroup({
   );
 }
 
-export function WordlePreview() {
-  const target: CorpusWord = wordleActivity.target;
+export function WordlePreview({
+  target = wordleActivity.target,
+  title = wordleActivity.title,
+  maxGuesses = wordleActivity.maxGuesses,
+}: {
+  target?: CorpusWord;
+  title?: string;
+  maxGuesses?: number;
+}) {
   const [currentGuess, setCurrentGuess] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState<SubmittedGuess[]>([]);
   const [message, setMessage] = useState("Choose phonemes from the HCE keyboard.");
@@ -88,7 +95,11 @@ export function WordlePreview() {
   );
 
   function choosePhoneme(symbol: string) {
-    if (isSolved || currentGuess.length >= target.phonemes.length) {
+    if (
+      isSolved ||
+      submitted.length >= maxGuesses ||
+      currentGuess.length >= target.phonemes.length
+    ) {
       return;
     }
     setCurrentGuess((guess) => [...guess, symbol]);
@@ -99,6 +110,11 @@ export function WordlePreview() {
   }
 
   function submitGuess() {
+    if (submitted.length >= maxGuesses || isSolved) {
+      setMessage("This Wordle preview is finished. Choose another target to reset.");
+      return;
+    }
+
     if (currentGuess.length !== target.phonemes.length) {
       setMessage(`Choose ${target.phonemes.length} phonemes before checking.`);
       return;
@@ -123,7 +139,7 @@ export function WordlePreview() {
             {target.difficulty}
           </p>
           <h2 className="text-2xl font-bold text-slate-950">
-            {wordleActivity.title}
+            {title}
           </h2>
         </div>
         <span className="w-fit rounded-md bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-900">
@@ -146,7 +162,7 @@ export function WordlePreview() {
       </div>
 
       <div className="mt-6 grid gap-2" aria-label="Submitted phoneme guesses">
-        {Array.from({ length: wordleActivity.maxGuesses }).map((_, rowIndex) => {
+        {Array.from({ length: maxGuesses }).map((_, rowIndex) => {
           const row = submitted[rowIndex];
           const active = rowIndex === submitted.length && !isSolved;
           const cells = row?.phonemes ?? (active ? currentGuess : []);
