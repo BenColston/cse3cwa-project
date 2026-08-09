@@ -122,11 +122,14 @@ export function WordlePreview({
 
     const result = scoreGuess(currentGuess, target.phonemes);
     const solved = result.every((item) => item === "correct");
+    const finalGuess = submitted.length + 1 >= maxGuesses;
     setSubmitted((guesses) => [...guesses, { phonemes: currentGuess, result }]);
     setCurrentGuess([]);
     setMessage(
       solved
         ? `Correct. The English equivalence is "${target.english}".`
+        : finalGuess
+          ? `Answer: ${target.english}. The phoneme sequence was /${target.phonemes.join("/ /")}/.`
         : "Not quite. Green is correct position; amber appears elsewhere.",
     );
   }
