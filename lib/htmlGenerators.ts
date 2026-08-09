@@ -46,6 +46,9 @@ function documentShell(title: string, body: string, script = "") {
     .present { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
     .absent { background: #e2e8f0; border-color: #94a3b8; color: #334155; }
     .grid { display: grid; gap: 4px; max-width: 520px; }
+    .grid.word-search { touch-action: none; }
+    .selected { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+    .found { background: #d1fae5; border-color: #10b981; color: #064e3b; }
     .answer { background: #ccfbf1; border-color: #0f766e; color: #134e4a; }
     .layout { display: grid; gap: 20px; }
     @media (min-width: 760px) { .layout { grid-template-columns: minmax(320px, 1fr) 1fr; } }
@@ -188,7 +191,8 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           <div id="wordList"></div>
         </div>
         <div>
-          <div id="grid" class="grid" aria-label="Phoneme word search grid"></div>
+          <div id="grid" class="grid word-search" aria-label="Phoneme word search grid"></div>
+          <p id="selectionFeedback" role="status" class="muted">Drag across the grid to find a phoneme sequence.</p>
         </div>
       </div>
     </section>`,
@@ -196,6 +200,10 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
       let seed = 0;
       let showAnswers = false;
       let puzzle = ${JSON.stringify(initialPuzzle)};
+      let selecting = false;
+      let selectionStart = null;
+      let selectedPath = [];
+      const foundWords = new Set();
       const fallbackPool = ${JSON.stringify(phonemeKeyboard.map((phoneme) => phoneme.symbol))};
       const directions = [
         { row: 0, col: 1 },
@@ -223,6 +231,61 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           const nextCol = col + direction.col * index;
           return grid[nextRow][nextCol] === null || grid[nextRow][nextCol] === phoneme;
         });
+      }
+
+      function coordKey(row, col) {
+        return row + '-' + col;
+      }
+
+      function getPath(start, end) {
+        const rowDelta = end.row - start.row;
+        const colDelta = end.col - start.col;
+        const isStraight = rowDelta === 0 || colDelta === 0 || Math.abs(rowDelta) === Math.abs(colDelta);
+        if (!isStraight) return [];
+        const steps = Math.max(Math.abs(rowDelta), Math.abs(colDelta));
+        const rowStep = rowDelta === 0 ? 0 : rowDelta / steps;
+        const colStep = colDelta === 0 ? 0 : colDelta / steps;
+        return Array.from({ length: steps + 1 }, (_, index) => ({
+          row: start.row + rowStep * index,
+          col: start.col + colStep * index
+        }));
+      }
+
+      function pathValue(path) {
+        return path.map((coord) => puzzle.grid[coord.row] && puzzle.grid[coord.row][coord.col]).join('|');
+      }
+
+      function clearSelection() {
+        selecting = false;
+        selectionStart = null;
+        selectedPath = [];
+        renderPuzzle();
+      }
+
+      function finishSelection() {
+        if (selectedPath.length === 0) {
+          clearSelection();
+          return;
+        }
+
+        const selected = pathValue(selectedPath);
+        const reversed = pathValue([...selectedPath].reverse());
+        const match = puzzle.solutions.find((solution) => {
+          const answer = solution.phonemes.join('|');
+          return answer === selected || answer === reversed;
+        });
+
+        if (match) {
+          foundWords.add(match.english);
+          document.getElementById('selectionFeedback').textContent = 'Found: /' + match.phonemes.join('/ /') + '/';
+        } else {
+          document.getElementById('selectionFeedback').textContent = 'No match yet. Try a straight horizontal, vertical, or diagonal path.';
+        }
+
+        selecting = false;
+        selectionStart = null;
+        selectedPath = [];
+        renderPuzzle();
       }
 
       function buildPuzzle() {
@@ -261,6 +324,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           })),
           solutions
         };
+        foundWords.clear();
         renderPuzzle(words);
       }
 
@@ -269,22 +333,58 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         grid.innerHTML = '';
         grid.style.gridTemplateColumns = 'repeat(' + puzzle.grid[0].length + ', minmax(36px, 1fr))';
         const answerCells = new Set(puzzle.solutions.flatMap((solution) => solution.coords.map((coord) => coord.row + '-' + coord.col)));
+        const selectedCells = new Set(selectedPath.map((coord) => coordKey(coord.row, coord.col)));
+        const foundCells = new Set(puzzle.solutions
+          .filter((solution) => foundWords.has(solution.english))
+          .flatMap((solution) => solution.coords.map((coord) => coordKey(coord.row, coord.col))));
         puzzle.grid.forEach((row, rowIndex) => {
           row.forEach((phoneme, colIndex) => {
-            const cell = document.createElement('span');
-            cell.className = 'cell' + (showAnswers && answerCells.has(rowIndex + '-' + colIndex) ? ' answer' : '');
+            const key = coordKey(rowIndex, colIndex);
+            const cell = document.createElement('button');
+            cell.type = 'button';
+            cell.dataset.row = String(rowIndex);
+            cell.dataset.col = String(colIndex);
+            cell.className = 'cell'
+              + (foundCells.has(key) ? ' found' : '')
+              + (selectedCells.has(key) ? ' selected' : '')
+              + (showAnswers && answerCells.has(key) ? ' answer' : '');
             cell.textContent = phoneme;
             grid.appendChild(cell);
           });
         });
         document.getElementById('wordList').innerHTML = words
-          .map((word) => '<p><strong>/' + word.phonemes.join('/ /') + '/</strong></p>')
+          .map((word) => '<p class="' + (foundWords.has(word.english) ? 'found' : '') + '"><strong>/' + word.phonemes.join('/ /') + '/</strong></p>')
           .join('');
       }
+
+      document.getElementById('grid').addEventListener('pointerdown', (event) => {
+        const cell = event.target.closest('[data-row]');
+        if (!cell) return;
+        selecting = true;
+        selectionStart = { row: Number(cell.dataset.row), col: Number(cell.dataset.col) };
+        selectedPath = [selectionStart];
+        renderPuzzle();
+      });
+
+      document.getElementById('grid').addEventListener('pointerover', (event) => {
+        if (!selecting || !selectionStart) return;
+        const cell = event.target.closest('[data-row]');
+        if (!cell) return;
+        const path = getPath(selectionStart, { row: Number(cell.dataset.row), col: Number(cell.dataset.col) });
+        if (path.length > 0) {
+          selectedPath = path;
+          renderPuzzle();
+        }
+      });
+
+      document.getElementById('grid').addEventListener('pointerup', finishSelection);
+      document.getElementById('grid').addEventListener('pointerleave', clearSelection);
+      document.getElementById('grid').addEventListener('pointercancel', clearSelection);
 
       document.getElementById('generateBtn').addEventListener('click', () => {
         seed += 1;
         showAnswers = false;
+        selectedPath = [];
         document.getElementById('answersBtn').textContent = 'Show answers';
         buildPuzzle();
       });
