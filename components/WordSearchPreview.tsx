@@ -1,12 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { PointerEvent, useMemo, useRef, useState } from "react";
 import { wordSearchWords } from "@/lib/activityData";
 import { createWordSearchPuzzle } from "@/lib/wordSearch";
 
 type Coord = {
   row: number;
   col: number;
+};
+
+type FoundSelection = {
+  english: string;
+  phonemes: string[];
+  coords: Coord[];
 };
 
 function coordKey(row: number, col: number) {
@@ -46,8 +52,10 @@ export function WordSearchPreview() {
   const [showAnswers, setShowAnswers] = useState(false);
   const [selectionStart, setSelectionStart] = useState<Coord | null>(null);
   const [selectedPath, setSelectedPath] = useState<Coord[]>([]);
-  const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [foundSelections, setFoundSelections] = useState<FoundSelection[]>([]);
   const [message, setMessage] = useState("Drag across the grid to find a phoneme sequence.");
+  const selectionStartRef = useRef<Coord | null>(null);
+  const selectedPathRef = useRef<Coord[]>([]);
 
   const puzzle = useMemo(
     () => createWordSearchPuzzle(wordSearchWords, rows, cols, version),
@@ -62,71 +70,98 @@ export function WordSearchPreview() {
     selectedPath.map((coord) => coordKey(coord.row, coord.col)),
   );
   const foundCells = new Set(
-    puzzle.solutions
-      .filter((solution) => foundWords.includes(solution.english))
-      .flatMap((solution) =>
-        solution.coords.map((coord) => coordKey(coord.row, coord.col)),
-      ),
+    foundSelections.flatMap((selection) =>
+      selection.coords.map((coord) => coordKey(coord.row, coord.col)),
+    ),
   );
 
   function updateRows(value: string) {
     setRows(Math.max(6, Math.min(12, Number(value) || 8)));
-    setFoundWords([]);
+    setFoundSelections([]);
     setSelectedPath([]);
+    selectedPathRef.current = [];
   }
 
   function updateCols(value: string) {
     setCols(Math.max(6, Math.min(12, Number(value) || 8)));
-    setFoundWords([]);
+    setFoundSelections([]);
     setSelectedPath([]);
+    selectedPathRef.current = [];
   }
 
   function regeneratePuzzle() {
     setVersion((value) => value + 1);
     setShowAnswers(false);
-    setFoundWords([]);
+    setFoundSelections([]);
     setSelectedPath([]);
+    selectedPathRef.current = [];
     setMessage("New puzzle generated. Drag across the grid to find a word.");
   }
 
   function startSelection(coord: Coord) {
+    selectionStartRef.current = coord;
+    selectedPathRef.current = [coord];
     setSelectionStart(coord);
     setSelectedPath([coord]);
   }
 
   function extendSelection(coord: Coord) {
-    if (!selectionStart) {
+    const start = selectionStartRef.current ?? selectionStart;
+    if (!start) {
       return;
     }
 
-    const path = getPath(selectionStart, coord);
+    const path = getPath(start, coord);
     if (path.length > 0) {
+      selectedPathRef.current = path;
       setSelectedPath(path);
     }
   }
 
-  function finishSelection() {
-    if (selectedPath.length === 0) {
+  function finishSelection(event?: PointerEvent<HTMLDivElement>) {
+    const targetCell = event?.target instanceof HTMLElement
+      ? event.target.closest("[data-row][data-col]")
+      : null;
+    const start = selectionStartRef.current ?? selectionStart;
+    const finalPath =
+      start && targetCell instanceof HTMLElement
+        ? getPath(start, {
+            row: Number(targetCell.dataset.row),
+            col: Number(targetCell.dataset.col),
+          })
+        : selectedPathRef.current;
+
+    if (finalPath.length === 0) {
+      selectionStartRef.current = null;
+      selectedPathRef.current = [];
       setSelectionStart(null);
+      setSelectedPath([]);
       return;
     }
 
-    const selected = pathValue(puzzle.grid, selectedPath);
-    const reversed = pathValue(puzzle.grid, [...selectedPath].reverse());
+    const selected = pathValue(puzzle.grid, finalPath);
+    const reversed = pathValue(puzzle.grid, [...finalPath].reverse());
     const match = puzzle.solutions.find((solution) => {
       const answer = solution.phonemes.join("|");
       return answer === selected || answer === reversed;
     });
 
     if (match) {
-      setFoundWords((words) =>
-        words.includes(match.english) ? words : [...words, match.english],
-      );
+      setFoundSelections((selections) => [
+        ...selections,
+        {
+          english: match.english,
+          phonemes: match.phonemes,
+          coords: finalPath,
+        },
+      ]);
       setMessage(`Found ${match.english}: /${match.phonemes.join("/ /")}/`);
     } else {
       setMessage("No match yet. Try a straight horizontal, vertical, or diagonal path.");
     }
 
+    selectionStartRef.current = null;
+    selectedPathRef.current = [];
     setSelectionStart(null);
     setSelectedPath([]);
   }
@@ -192,11 +227,15 @@ export function WordSearchPreview() {
           style={{ gridTemplateColumns: `repeat(${cols}, minmax(34px, 1fr))` }}
           aria-label="Generated phoneme word search grid"
           onPointerLeave={() => {
+            selectionStartRef.current = null;
+            selectedPathRef.current = [];
             setSelectionStart(null);
             setSelectedPath([]);
           }}
           onPointerUp={finishSelection}
           onPointerCancel={() => {
+            selectionStartRef.current = null;
+            selectedPathRef.current = [];
             setSelectionStart(null);
             setSelectedPath([]);
           }}
@@ -211,6 +250,8 @@ export function WordSearchPreview() {
                 <button
                   key={`${rowIndex}-${colIndex}`}
                   type="button"
+                  data-row={rowIndex}
+                  data-col={colIndex}
                   onPointerDown={() => startSelection({ row: rowIndex, col: colIndex })}
                   onPointerEnter={() => extendSelection({ row: rowIndex, col: colIndex })}
                   onFocus={() => setMessage("Use pointer drag to select phoneme words in the grid.")}
@@ -245,7 +286,7 @@ export function WordSearchPreview() {
               <li
                 key={word.english}
                 className={`rounded-md border px-3 py-2 text-sm ${
-                  foundWords.includes(word.english)
+                  foundSelections.some((selection) => selection.english === word.english)
                     ? "border-emerald-300 bg-emerald-50 text-emerald-900 line-through"
                     : "border-slate-200 bg-slate-50 text-slate-700"
                 }`}
