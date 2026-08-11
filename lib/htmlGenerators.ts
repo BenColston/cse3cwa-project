@@ -41,7 +41,7 @@ function documentShell(title: string, body: string, script = "") {
     .chip, .key { border: 1px solid #99f6e4; background: #ccfbf1; color: #134e4a; border-radius: 6px; padding: 8px 10px; font-weight: 700; }
     .key { min-width: 44px; background: white; border-color: #cbd5e1; color: #0f172a; }
     .wordle-row { display: grid; gap: 8px; margin-bottom: 8px; }
-    .cell { aspect-ratio: 1; min-height: 42px; display: grid; place-items: center; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; font-weight: 800; }
+    .cell { aspect-ratio: 1; min-height: 42px; display: grid; place-items: center; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; border-radius: 4px; font-weight: 800; }
     .correct { background: #ccfbf1; border-color: #0f766e; color: #134e4a; }
     .present { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
     .absent { background: #e2e8f0; border-color: #94a3b8; color: #334155; }
@@ -203,7 +203,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
       let selecting = false;
       let selectionStart = null;
       let selectedPath = [];
-      const foundWords = new Set();
+      let foundSelections = [];
       const fallbackPool = ${JSON.stringify(phonemeKeyboard.map((phoneme) => phoneme.symbol))};
       const directions = [
         { row: 0, col: 1 },
@@ -262,21 +262,30 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         renderPuzzle();
       }
 
-      function finishSelection() {
-        if (selectedPath.length === 0) {
+      function finishSelection(event) {
+        const cell = event && event.target.closest('[data-row]');
+        const finalPath = selectionStart && cell
+          ? getPath(selectionStart, { row: Number(cell.dataset.row), col: Number(cell.dataset.col) })
+          : selectedPath;
+
+        if (finalPath.length === 0) {
           clearSelection();
           return;
         }
 
-        const selected = pathValue(selectedPath);
-        const reversed = pathValue([...selectedPath].reverse());
+        const selected = pathValue(finalPath);
+        const reversed = pathValue([...finalPath].reverse());
         const match = puzzle.solutions.find((solution) => {
           const answer = solution.phonemes.join('|');
           return answer === selected || answer === reversed;
         });
 
         if (match) {
-          foundWords.add(match.english);
+          foundSelections.push({
+            english: match.english,
+            phonemes: match.phonemes,
+            coords: finalPath
+          });
           document.getElementById('selectionFeedback').textContent = 'Found: /' + match.phonemes.join('/ /') + '/';
         } else {
           document.getElementById('selectionFeedback').textContent = 'No match yet. Try a straight horizontal, vertical, or diagonal path.';
@@ -324,7 +333,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           })),
           solutions
         };
-        foundWords.clear();
+        foundSelections = [];
         renderPuzzle(words);
       }
 
@@ -334,9 +343,8 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         grid.style.gridTemplateColumns = 'repeat(' + puzzle.grid[0].length + ', minmax(36px, 1fr))';
         const answerCells = new Set(puzzle.solutions.flatMap((solution) => solution.coords.map((coord) => coord.row + '-' + coord.col)));
         const selectedCells = new Set(selectedPath.map((coord) => coordKey(coord.row, coord.col)));
-        const foundCells = new Set(puzzle.solutions
-          .filter((solution) => foundWords.has(solution.english))
-          .flatMap((solution) => solution.coords.map((coord) => coordKey(coord.row, coord.col))));
+        const foundCells = new Set(foundSelections
+          .flatMap((selection) => selection.coords.map((coord) => coordKey(coord.row, coord.col))));
         puzzle.grid.forEach((row, rowIndex) => {
           row.forEach((phoneme, colIndex) => {
             const key = coordKey(rowIndex, colIndex);
@@ -353,7 +361,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           });
         });
         document.getElementById('wordList').innerHTML = words
-          .map((word) => '<p class="' + (foundWords.has(word.english) ? 'found' : '') + '"><strong>/' + word.phonemes.join('/ /') + '/</strong></p>')
+          .map((word) => '<p class="' + (foundSelections.some((selection) => selection.english === word.english) ? 'found' : '') + '"><strong>/' + word.phonemes.join('/ /') + '/</strong></p>')
           .join('');
       }
 
