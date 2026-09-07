@@ -1,0 +1,44 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: cse3cwa-frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:${API_PORT:-4080}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./api
+    container_name: cse3cwa-api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cse3cwa}:${POSTGRES_PASSWORD:-cse3cwa_dev_password}@db:5432/${POSTGRES_DB:-cse3cwa}
+      NODE_ENV: production
+    ports:
+      - "${API_PORT:-4080}:4080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: cse3cwa-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cse3cwa}
+      POSTGRES_USER: ${POSTGRES_USER:-cse3cwa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cse3cwa_dev_password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cse3cwa} -d ${POSTGRES_DB:-cse3cwa}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
