@@ -32,3 +32,25 @@ npm run dev
 ```
 
 Then open `http://localhost:3000`.
+
+## Docker base
+
+The project now has a three-service Docker Compose foundation:
+
+```text
+frontend  Next.js user interface, exposed on FRONTEND_PORT or 3000
+api       Next.js backend/API service, exposed on API_PORT or 4080
+db        Postgres database service, exposed on POSTGRES_PORT or 5432
+```
+
+Example local Docker command:
+
+```bash
+docker compose up --build
+```
+
+The API health check should then be available at
+`http://localhost:4080/health`.
+
+For an AWS Academy EC2 demonstration, `FRONTEND_PORT` can be set to `80` so the
+frontend is available over the standard HTTP port.
