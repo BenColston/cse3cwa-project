@@ -6,6 +6,9 @@ export default function ApiHome() {
       <p>
         Health check: <code>/health</code>
       </p>
+      <p>
+        Word list CRUD: <code>/word-lists</code>
+      </p>
     </main>
   );
 }
