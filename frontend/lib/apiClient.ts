@@ -32,8 +32,24 @@ type WordListsResponse = {
   wordLists: ApiWordList[];
 };
 
+type WordListResponse = {
+  wordList: ApiWordList;
+};
+
 type ActivitiesResponse = {
   activities: ApiActivityConfig[];
+};
+
+export type WordListPayload = {
+  name: string;
+  description?: string | null;
+  source?: string | null;
+  words: {
+    word: string;
+    phonemes: string[];
+    hint?: string | null;
+    notes?: string | null;
+  }[];
 };
 
 const API_BASE_URL =
@@ -53,6 +69,31 @@ async function fetchJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+async function sendJson<T>(
+  path: string,
+  method: "POST" | "PUT" | "DELETE",
+  body?: unknown,
+): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return response.json() as Promise<T>;
+}
+
 export function getApiBaseUrl() {
   return API_BASE_URL;
 }
@@ -65,4 +106,17 @@ export async function fetchWordLists() {
 export async function fetchActivityConfigs() {
   const data = await fetchJson<ActivitiesResponse>("/activities");
   return data.activities;
+}
+
+export async function createWordList(payload: WordListPayload) {
+  const data = await sendJson<WordListResponse>("/word-lists", "POST", payload);
+  return data.wordList;
+}
+
+export async function deleteWordList(id: string) {
+  await sendJson<void>(`/word-lists/${encodeURIComponent(id)}`, "DELETE");
+}
+
+export async function deleteActivityConfig(id: string) {
+  await sendJson<void>(`/activities/${encodeURIComponent(id)}`, "DELETE");
 }
