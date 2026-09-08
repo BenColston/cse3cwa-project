@@ -1,5 +1,7 @@
 import {
+  emptyResponse,
   errorResponse,
+  jsonResponse,
   notFoundResponse,
   serverErrorResponse,
 } from "@/lib/apiResponses";
@@ -29,7 +31,7 @@ export async function GET(_request: Request, context: WordListContext) {
       return notFoundResponse("Word list");
     }
 
-    return Response.json({ wordList });
+    return jsonResponse({ wordList });
   } catch (error) {
     console.error("Failed to fetch word list", error);
     return serverErrorResponse();
@@ -85,7 +87,7 @@ export async function PUT(request: Request, context: WordListContext) {
       });
     });
 
-    return Response.json({ wordList });
+    return jsonResponse({ wordList });
   } catch (error) {
     console.error("Failed to update word list", error);
     return serverErrorResponse();
@@ -109,7 +111,7 @@ export async function DELETE(_request: Request, context: WordListContext) {
       where: { id },
     });
 
-    return new Response(null, { status: 204 });
+    return emptyResponse();
   } catch (error) {
     console.error("Failed to delete word list", error);
     return serverErrorResponse();

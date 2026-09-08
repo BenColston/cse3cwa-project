@@ -1,5 +1,6 @@
 import {
   errorResponse,
+  jsonResponse,
   notFoundResponse,
   serverErrorResponse,
 } from "@/lib/apiResponses";
@@ -30,7 +31,7 @@ export async function GET(_request: Request, context: ActivityOutputContext) {
       orderBy: { createdAt: "desc" },
     });
 
-    return Response.json({ outputs });
+    return jsonResponse({ outputs });
   } catch (error) {
     console.error("Failed to fetch generated outputs", error);
     return serverErrorResponse();
@@ -70,7 +71,7 @@ export async function POST(request: Request, context: ActivityOutputContext) {
       },
     });
 
-    return Response.json({ output }, { status: 201 });
+    return jsonResponse({ output }, { status: 201 });
   } catch (error) {
     console.error("Failed to create generated output", error);
     return serverErrorResponse();

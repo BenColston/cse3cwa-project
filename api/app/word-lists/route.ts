@@ -1,4 +1,8 @@
-import { errorResponse, serverErrorResponse } from "@/lib/apiResponses";
+import {
+  errorResponse,
+  jsonResponse,
+  serverErrorResponse,
+} from "@/lib/apiResponses";
 import { prisma } from "@/lib/prisma";
 import { validateWordListInput } from "@/lib/wordListValidation";
 
@@ -13,7 +17,7 @@ export async function GET() {
       orderBy: { updatedAt: "desc" },
     });
 
-    return Response.json({ wordLists });
+    return jsonResponse({ wordLists });
   } catch (error) {
     console.error("Failed to fetch word lists", error);
     return serverErrorResponse();
@@ -48,7 +52,7 @@ export async function POST(request: Request) {
       include: { words: true },
     });
 
-    return Response.json({ wordList }, { status: 201 });
+    return jsonResponse({ wordList }, { status: 201 });
   } catch (error) {
     console.error("Failed to create word list", error);
     return serverErrorResponse();
