@@ -54,3 +54,19 @@ The API health check should then be available at
 
 For an AWS Academy EC2 demonstration, `FRONTEND_PORT` can be set to `80` so the
 frontend is available over the standard HTTP port.
+
+## Database foundation
+
+The API service uses Prisma with Postgres. The initial schema stores phoneme word
+lists, words with phoneme arrays, activity configurations, and generated HTML
+records.
+
+Useful API project commands:
+
+```bash
+cd api
+copy .env.example .env
+npm run prisma:validate
+npm run prisma:generate
+npm run db:push
+```

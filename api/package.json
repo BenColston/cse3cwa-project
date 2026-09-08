@@ -6,9 +6,13 @@
     "dev": "next dev -p 4080",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 4080",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "db:push": "prisma db push"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -19,6 +23,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "prisma": "^6.19.0",
     "typescript": "^5"
   }
 }
