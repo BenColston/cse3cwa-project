@@ -1,5 +1,7 @@
 import {
+  emptyResponse,
   errorResponse,
+  jsonResponse,
   notFoundResponse,
   serverErrorResponse,
 } from "@/lib/apiResponses";
@@ -38,7 +40,7 @@ export async function GET(_request: Request, context: ActivityContext) {
       return notFoundResponse("Activity configuration");
     }
 
-    return Response.json({ activity });
+    return jsonResponse({ activity });
   } catch (error) {
     console.error("Failed to fetch activity configuration", error);
     return serverErrorResponse();
@@ -86,7 +88,7 @@ export async function PUT(request: Request, context: ActivityContext) {
       include: activityInclude,
     });
 
-    return Response.json({ activity });
+    return jsonResponse({ activity });
   } catch (error) {
     console.error("Failed to update activity configuration", error);
     return serverErrorResponse();
@@ -110,7 +112,7 @@ export async function DELETE(_request: Request, context: ActivityContext) {
       where: { id },
     });
 
-    return new Response(null, { status: 204 });
+    return emptyResponse();
   } catch (error) {
     console.error("Failed to delete activity configuration", error);
     return serverErrorResponse();

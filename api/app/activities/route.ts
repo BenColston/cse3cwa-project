@@ -1,4 +1,8 @@
-import { errorResponse, serverErrorResponse } from "@/lib/apiResponses";
+import {
+  errorResponse,
+  jsonResponse,
+  serverErrorResponse,
+} from "@/lib/apiResponses";
 import { validateActivityConfigInput } from "@/lib/activityConfigValidation";
 import { prisma } from "@/lib/prisma";
 
@@ -20,7 +24,7 @@ export async function GET() {
       orderBy: { updatedAt: "desc" },
     });
 
-    return Response.json({ activities });
+    return jsonResponse({ activities });
   } catch (error) {
     console.error("Failed to fetch activity configurations", error);
     return serverErrorResponse();
@@ -65,7 +69,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return Response.json({ activity }, { status: 201 });
+    return jsonResponse({ activity }, { status: 201 });
   } catch (error) {
     console.error("Failed to create activity configuration", error);
     return serverErrorResponse();

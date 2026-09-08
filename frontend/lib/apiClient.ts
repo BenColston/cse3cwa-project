@@ -85,6 +85,20 @@ export type GeneratedOutputPayload = {
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4080";
 
+async function errorMessageFor(response: Response) {
+  try {
+    const data = (await response.json()) as { error?: unknown };
+
+    if (typeof data.error === "string") {
+      return data.error;
+    }
+  } catch {
+    // Fall through to the generic status message.
+  }
+
+  return `Request failed with status ${response.status}`;
+}
+
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
@@ -93,7 +107,7 @@ async function fetchJson<T>(path: string): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    throw new Error(await errorMessageFor(response));
   }
 
   return response.json() as Promise<T>;
@@ -114,7 +128,7 @@ async function sendJson<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    throw new Error(await errorMessageFor(response));
   }
 
   if (response.status === 204) {
