@@ -82,4 +82,9 @@ POST    /word-lists
 GET     /word-lists/:id
 PUT     /word-lists/:id
 DELETE  /word-lists/:id
+GET     /activities
+POST    /activities
+GET     /activities/:id
+PUT     /activities/:id
+DELETE  /activities/:id
 ```
