@@ -1,7 +1,7 @@
 "use client";
 
 import { PointerEvent, useMemo, useRef, useState } from "react";
-import { wordSearchWords } from "@/lib/activityData";
+import { wordSearchWords, type CorpusWord } from "@/lib/activityData";
 import { createWordSearchPuzzle } from "@/lib/wordSearch";
 
 type Coord = {
@@ -45,7 +45,14 @@ function pathValue(grid: string[][], path: Coord[]) {
   return path.map((coord) => grid[coord.row]?.[coord.col]).join("|");
 }
 
-export function WordSearchPreview() {
+export function WordSearchPreview({
+  words = wordSearchWords,
+  sourceName = "Local HCE corpus",
+}: {
+  words?: CorpusWord[];
+  sourceName?: string;
+}) {
+  const activeWords = words.length > 0 ? words : wordSearchWords;
   const [rows, setRows] = useState(8);
   const [cols, setCols] = useState(8);
   const [version, setVersion] = useState(0);
@@ -58,8 +65,8 @@ export function WordSearchPreview() {
   const selectedPathRef = useRef<Coord[]>([]);
 
   const puzzle = useMemo(
-    () => createWordSearchPuzzle(wordSearchWords, rows, cols, version),
-    [rows, cols, version],
+    () => createWordSearchPuzzle(activeWords, rows, cols, version),
+    [activeWords, rows, cols, version],
   );
   const answerCells = new Set(
     puzzle.solutions.flatMap((solution) =>
@@ -171,14 +178,14 @@ export function WordSearchPreview() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-teal-700">
-            Generated from corpus words
+            Generated from {sourceName}
           </p>
           <h2 className="text-2xl font-bold text-slate-950">
             Phoneme Word Search
           </h2>
         </div>
         <span className="w-fit rounded-md bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-900">
-          Five words
+          {activeWords.length} words
         </span>
       </div>
 
@@ -282,7 +289,7 @@ export function WordSearchPreview() {
             Word list
           </h3>
           <ul className="mt-3 grid gap-2">
-            {wordSearchWords.map((word) => (
+            {activeWords.map((word) => (
               <li
                 key={word.english}
                 className={`rounded-md border px-3 py-2 text-sm ${
