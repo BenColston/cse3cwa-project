@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ActivityType {
+  WORDLE
+  WORD_SEARCH
+}
+
+enum DifficultyLevel {
+  EASY
+  MEDIUM
+  HARD
+  CUSTOM
+}
+
+model WordList {
+  id          String           @id @default(cuid())
+  name        String
+  description String?
+  source      String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  words       WordEntry[]
+  activities  ActivityConfig[]
+
+  @@index([name])
+}
+
+model WordEntry {
+  id        String   @id @default(cuid())
+  word      String
+  phonemes  String[]
+  hint      String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  listId    String
+  list      WordList @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  @@index([listId])
+  @@index([word])
+}
+
+model ActivityConfig {
+  id               String            @id @default(cuid())
+  name             String
+  type             ActivityType
+  difficulty       DifficultyLevel   @default(MEDIUM)
+  settings         Json
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  wordListId       String
+  wordList         WordList          @relation(fields: [wordListId], references: [id], onDelete: Cascade)
+  generatedOutputs GeneratedOutput[]
+
+  @@index([type])
+  @@index([wordListId])
+}
+
+model GeneratedOutput {
+  id         String         @id @default(cuid())
+  filename   String
+  html       String
+  createdAt  DateTime       @default(now())
+  activityId String
+  activity   ActivityConfig @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@index([activityId])
+}
