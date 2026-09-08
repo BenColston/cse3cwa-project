@@ -40,6 +40,10 @@ type ActivitiesResponse = {
   activities: ApiActivityConfig[];
 };
 
+type ActivityConfigResponse = {
+  activity: ApiActivityConfig;
+};
+
 export type WordListPayload = {
   name: string;
   description?: string | null;
@@ -50,6 +54,14 @@ export type WordListPayload = {
     hint?: string | null;
     notes?: string | null;
   }[];
+};
+
+export type ActivityConfigPayload = {
+  name: string;
+  type: ApiActivityConfig["type"];
+  difficulty: ApiActivityConfig["difficulty"];
+  wordListId: string;
+  settings: Record<string, unknown>;
 };
 
 const API_BASE_URL =
@@ -119,4 +131,13 @@ export async function deleteWordList(id: string) {
 
 export async function deleteActivityConfig(id: string) {
   await sendJson<void>(`/activities/${encodeURIComponent(id)}`, "DELETE");
+}
+
+export async function createActivityConfig(payload: ActivityConfigPayload) {
+  const data = await sendJson<ActivityConfigResponse>(
+    "/activities",
+    "POST",
+    payload,
+  );
+  return data.activity;
 }
