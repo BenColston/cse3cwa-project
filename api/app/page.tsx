@@ -9,6 +9,9 @@ export default function ApiHome() {
       <p>
         Word list CRUD: <code>/word-lists</code>
       </p>
+      <p>
+        Activity config CRUD: <code>/activities</code>
+      </p>
     </main>
   );
 }
