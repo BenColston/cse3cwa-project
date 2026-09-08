@@ -8,7 +8,13 @@ import {
   wordleActivity,
   type CorpusWord,
 } from "@/lib/activityData";
-import { ApiWordList, fetchWordLists, getApiBaseUrl } from "@/lib/apiClient";
+import {
+  ApiActivityConfig,
+  ApiWordList,
+  createActivityConfig,
+  fetchWordLists,
+  getApiBaseUrl,
+} from "@/lib/apiClient";
 import { generateWordleHtml } from "@/lib/htmlGenerators";
 import { wordListToCorpusWords } from "@/lib/savedWordLists";
 
@@ -22,6 +28,20 @@ function filenameForWord(word: CorpusWord) {
   return `phoneme-wordle-${word.english}-${word.phonemes.length}-phonemes.html`;
 }
 
+function difficultyForApi(
+  difficulty: CorpusWord["difficulty"],
+): ApiActivityConfig["difficulty"] {
+  if (difficulty === "3 phonemes") {
+    return "EASY";
+  }
+
+  if (difficulty === "4 phonemes") {
+    return "MEDIUM";
+  }
+
+  return "HARD";
+}
+
 export function WordleBuilder() {
   const [savedLists, setSavedLists] = useState<ApiWordList[]>([]);
   const [selectedListId, setSelectedListId] = useState("local");
@@ -31,6 +51,9 @@ export function WordleBuilder() {
   const [difficulty, setDifficulty] =
     useState<CorpusWord["difficulty"]>("3 phonemes");
   const [targetEnglish, setTargetEnglish] = useState(wordleActivity.target.english);
+  const [configName, setConfigName] = useState("Wordle classroom activity");
+  const [configMessage, setConfigMessage] = useState("");
+  const [isSavingConfig, setIsSavingConfig] = useState(false);
 
   const selectedSavedList = savedLists.find((list) => list.id === selectedListId);
   const activeWords =
@@ -104,6 +127,44 @@ export function WordleBuilder() {
     setSelectedListId(nextListId);
     setDifficulty(firstWord.difficulty);
     setTargetEnglish(firstWord.english);
+  }
+
+  async function saveConfiguration() {
+    if (!selectedSavedList) {
+      setConfigMessage("Choose a saved backend word list before saving a configuration.");
+      return;
+    }
+
+    if (!configName.trim()) {
+      setConfigMessage("Configuration name is required.");
+      return;
+    }
+
+    setIsSavingConfig(true);
+
+    try {
+      await createActivityConfig({
+        name: configName.trim(),
+        type: "WORDLE",
+        difficulty: difficultyForApi(selectedDifficulty),
+        wordListId: selectedSavedList.id,
+        settings: {
+          targetEnglish: target.english,
+          targetPhonemes: target.phonemes,
+          maxGuesses: wordleActivity.maxGuesses,
+          sourceName: activeSourceName,
+        },
+      });
+      setConfigMessage("Wordle configuration saved.");
+    } catch (error) {
+      setConfigMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not save the Wordle configuration.",
+      );
+    } finally {
+      setIsSavingConfig(false);
+    }
   }
 
   return (
@@ -198,6 +259,30 @@ export function WordleBuilder() {
               filename={filenameForWord(target)}
               html={generateWordleHtml({ ...wordleActivity, target })}
             />
+          </div>
+
+          <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+            <label className="grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
+              Configuration name
+              <input
+                value={configName}
+                onChange={(event) => setConfigName(event.target.value)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={saveConfiguration}
+              disabled={isSavingConfig || !selectedSavedList}
+              className="mt-3 rounded-md bg-teal-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            >
+              {isSavingConfig ? "Saving..." : "Save configuration"}
+            </button>
+            {configMessage ? (
+              <p className="mt-3 text-sm font-semibold text-slate-700">
+                {configMessage}
+              </p>
+            ) : null}
           </div>
         </div>
       </aside>

@@ -48,13 +48,19 @@ function pathValue(grid: string[][], path: Coord[]) {
 export function WordSearchPreview({
   words = wordSearchWords,
   sourceName = "Local HCE corpus",
+  rows,
+  cols,
+  onRowsChange,
+  onColsChange,
 }: {
   words?: CorpusWord[];
   sourceName?: string;
+  rows: number;
+  cols: number;
+  onRowsChange: (rows: number) => void;
+  onColsChange: (cols: number) => void;
 }) {
   const activeWords = words.length > 0 ? words : wordSearchWords;
-  const [rows, setRows] = useState(8);
-  const [cols, setCols] = useState(8);
   const [version, setVersion] = useState(0);
   const [showAnswers, setShowAnswers] = useState(false);
   const [selectionStart, setSelectionStart] = useState<Coord | null>(null);
@@ -83,14 +89,14 @@ export function WordSearchPreview({
   );
 
   function updateRows(value: string) {
-    setRows(Math.max(6, Math.min(12, Number(value) || 8)));
+    onRowsChange(Math.max(6, Math.min(12, Number(value) || 8)));
     setFoundSelections([]);
     setSelectedPath([]);
     selectedPathRef.current = [];
   }
 
   function updateCols(value: string) {
-    setCols(Math.max(6, Math.min(12, Number(value) || 8)));
+    onColsChange(Math.max(6, Math.min(12, Number(value) || 8)));
     setFoundSelections([]);
     setSelectedPath([]);
     selectedPathRef.current = [];
