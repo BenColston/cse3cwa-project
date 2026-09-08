@@ -70,3 +70,16 @@ npm run prisma:validate
 npm run prisma:generate
 npm run db:push
 ```
+
+## API endpoints
+
+Current backend routes:
+
+```text
+GET     /health
+GET     /word-lists
+POST    /word-lists
+GET     /word-lists/:id
+PUT     /word-lists/:id
+DELETE  /word-lists/:id
+```
