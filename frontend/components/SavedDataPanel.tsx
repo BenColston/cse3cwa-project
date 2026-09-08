@@ -12,6 +12,7 @@ import {
   getApiBaseUrl,
   WordListPayload,
 } from "@/lib/apiClient";
+import { downloadHtml } from "@/lib/htmlGenerators";
 
 type LoadState = "idle" | "loading" | "ready" | "error";
 
@@ -404,6 +405,36 @@ export function SavedDataPanel() {
                   <p className="mt-1 text-sm text-slate-600">
                     Word list: {activity.wordList?.name ?? activity.wordListId}
                   </p>
+                  {activity.generatedOutputs?.length ? (
+                    <div className="mt-3 grid gap-2 rounded-md bg-slate-50 p-3">
+                      <p className="text-sm font-bold text-slate-900">
+                        Stored HTML outputs
+                      </p>
+                      {activity.generatedOutputs.map((output) => (
+                        <div
+                          key={output.id}
+                          className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                        >
+                          <span className="break-all text-sm text-slate-700">
+                            {output.filename}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              downloadHtml(output.filename, output.html)
+                            }
+                            className="w-fit rounded-md border border-slate-300 px-3 py-2 text-sm font-bold text-slate-800 hover:bg-white"
+                          >
+                            Download
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-sm text-slate-500">
+                      No generated HTML stored yet.
+                    </p>
+                  )}
                 </article>
               ))
             ) : (

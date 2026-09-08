@@ -12,6 +12,7 @@ import {
   ApiActivityConfig,
   ApiWordList,
   createActivityConfig,
+  createGeneratedOutput,
   fetchActivityConfigs,
   fetchWordLists,
   getApiBaseUrl,
@@ -78,6 +79,9 @@ export function WordleBuilder() {
   const [configName, setConfigName] = useState("Wordle classroom activity");
   const [configMessage, setConfigMessage] = useState("");
   const [isSavingConfig, setIsSavingConfig] = useState(false);
+  const [activeConfigId, setActiveConfigId] = useState("");
+  const [outputMessage, setOutputMessage] = useState("");
+  const [isSavingOutput, setIsSavingOutput] = useState(false);
 
   const selectedSavedList = savedLists.find((list) => list.id === selectedListId);
   const activeWords =
@@ -99,6 +103,8 @@ export function WordleBuilder() {
     availableWords.find((word) => word.english === targetEnglish) ??
     availableWords[0] ??
     wordleActivity.target;
+  const generatedFilename = filenameForWord(target);
+  const generatedHtml = generateWordleHtml({ ...wordleActivity, target });
 
   useEffect(() => {
     let active = true;
@@ -145,6 +151,8 @@ export function WordleBuilder() {
     );
     setDifficulty(nextDifficulty);
     setTargetEnglish(firstWord?.english ?? wordleActivity.target.english);
+    setActiveConfigId("");
+    setOutputMessage("");
   }
 
   function chooseWordList(nextListId: string) {
@@ -155,6 +163,14 @@ export function WordleBuilder() {
     setSelectedListId(nextListId);
     setDifficulty(firstWord.difficulty);
     setTargetEnglish(firstWord.english);
+    setActiveConfigId("");
+    setOutputMessage("");
+  }
+
+  function chooseTarget(nextTargetEnglish: string) {
+    setTargetEnglish(nextTargetEnglish);
+    setActiveConfigId("");
+    setOutputMessage("");
   }
 
   function loadConfiguration(configId: string) {
@@ -180,6 +196,8 @@ export function WordleBuilder() {
     setDifficulty(targetWord.difficulty || difficultyFromApi(config.difficulty));
     setTargetEnglish(targetWord.english);
     setConfigName(config.name);
+    setActiveConfigId(config.id);
+    setOutputMessage("");
     setConfigMessage(`Loaded configuration: ${config.name}.`);
   }
 
@@ -210,6 +228,8 @@ export function WordleBuilder() {
         },
       });
       setSavedConfigs((configs) => [savedConfig, ...configs]);
+      setActiveConfigId(savedConfig.id);
+      setOutputMessage("");
       setConfigMessage("Wordle configuration saved.");
     } catch (error) {
       setConfigMessage(
@@ -219,6 +239,31 @@ export function WordleBuilder() {
       );
     } finally {
       setIsSavingConfig(false);
+    }
+  }
+
+  async function saveGeneratedOutput() {
+    if (!activeConfigId) {
+      setOutputMessage("Save or load a configuration before storing generated HTML.");
+      return;
+    }
+
+    setIsSavingOutput(true);
+
+    try {
+      await createGeneratedOutput(activeConfigId, {
+        filename: generatedFilename,
+        html: generatedHtml,
+      });
+      setOutputMessage("Generated Wordle HTML stored.");
+    } catch (error) {
+      setOutputMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not store generated Wordle HTML.",
+      );
+    } finally {
+      setIsSavingOutput(false);
     }
   }
 
@@ -279,7 +324,7 @@ export function WordleBuilder() {
             Target word
             <select
               value={target.english}
-              onChange={(event) => setTargetEnglish(event.target.value)}
+              onChange={(event) => chooseTarget(event.target.value)}
               className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
             >
               {availableWords.map((word) => (
@@ -311,9 +356,22 @@ export function WordleBuilder() {
               can drive the selected target when the API is available.
             </p>
             <DownloadButton
-              filename={filenameForWord(target)}
-              html={generateWordleHtml({ ...wordleActivity, target })}
+              filename={generatedFilename}
+              html={generatedHtml}
             />
+            <button
+              type="button"
+              onClick={saveGeneratedOutput}
+              disabled={isSavingOutput || !activeConfigId}
+              className="w-fit rounded-md border border-teal-700 bg-white px-4 py-2.5 text-sm font-bold text-teal-800 hover:bg-teal-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
+            >
+              {isSavingOutput ? "Storing..." : "Store generated HTML"}
+            </button>
+            {outputMessage ? (
+              <p className="text-sm font-semibold text-slate-700">
+                {outputMessage}
+              </p>
+            ) : null}
           </div>
 
           <div className="rounded-md border border-slate-200 bg-slate-50 p-4">

@@ -20,6 +20,9 @@ const activityInclude = {
       },
     },
   },
+  generatedOutputs: {
+    orderBy: { createdAt: "desc" as const },
+  },
 };
 
 export async function GET(_request: Request, context: ActivityContext) {

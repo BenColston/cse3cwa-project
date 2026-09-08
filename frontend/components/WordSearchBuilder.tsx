@@ -8,6 +8,7 @@ import {
   ApiActivityConfig,
   ApiWordList,
   createActivityConfig,
+  createGeneratedOutput,
   fetchActivityConfigs,
   fetchWordLists,
   getApiBaseUrl,
@@ -36,6 +37,9 @@ export function WordSearchBuilder() {
   const [configName, setConfigName] = useState("Word Search classroom activity");
   const [configMessage, setConfigMessage] = useState("");
   const [isSavingConfig, setIsSavingConfig] = useState(false);
+  const [activeConfigId, setActiveConfigId] = useState("");
+  const [outputMessage, setOutputMessage] = useState("");
+  const [isSavingOutput, setIsSavingOutput] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -84,6 +88,28 @@ export function WordSearchBuilder() {
       ? wordListToCorpusWords(selectedSavedList)
       : wordSearchWords;
   const sourceName = selectedSavedList?.name ?? "Local HCE corpus";
+  const generatedFilename = `phoneme-word-search-${sourceName.toLowerCase().replaceAll(/\W+/g, "-")}.html`;
+  const generatedHtml = generateWordSearchHtml(activeWords);
+
+  function clearActiveOutputContext() {
+    setActiveConfigId("");
+    setOutputMessage("");
+  }
+
+  function chooseWordList(nextListId: string) {
+    setSelectedListId(nextListId);
+    clearActiveOutputContext();
+  }
+
+  function updateRows(nextRows: number) {
+    setRows(nextRows);
+    clearActiveOutputContext();
+  }
+
+  function updateCols(nextCols: number) {
+    setCols(nextCols);
+    clearActiveOutputContext();
+  }
 
   function loadConfiguration(configId: string) {
     const config = savedConfigs.find((item) => item.id === configId);
@@ -96,6 +122,8 @@ export function WordSearchBuilder() {
     setRows(Math.max(6, Math.min(12, numberSetting(config.settings, "rows", 8))));
     setCols(Math.max(6, Math.min(12, numberSetting(config.settings, "cols", 8))));
     setConfigName(config.name);
+    setActiveConfigId(config.id);
+    setOutputMessage("");
     setConfigMessage(`Loaded configuration: ${config.name}.`);
   }
 
@@ -126,6 +154,8 @@ export function WordSearchBuilder() {
         },
       });
       setSavedConfigs((configs) => [savedConfig, ...configs]);
+      setActiveConfigId(savedConfig.id);
+      setOutputMessage("");
       setConfigMessage("Word Search configuration saved.");
     } catch (error) {
       setConfigMessage(
@@ -138,6 +168,31 @@ export function WordSearchBuilder() {
     }
   }
 
+  async function saveGeneratedOutput() {
+    if (!activeConfigId) {
+      setOutputMessage("Save or load a configuration before storing generated HTML.");
+      return;
+    }
+
+    setIsSavingOutput(true);
+
+    try {
+      await createGeneratedOutput(activeConfigId, {
+        filename: generatedFilename,
+        html: generatedHtml,
+      });
+      setOutputMessage("Generated Word Search HTML stored.");
+    } catch (error) {
+      setOutputMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not store generated Word Search HTML.",
+      );
+    } finally {
+      setIsSavingOutput(false);
+    }
+  }
+
   return (
     <section className="mx-auto grid max-w-6xl gap-5 px-4 py-8 sm:px-6 lg:grid-cols-[1.2fr_0.8fr]">
       <WordSearchPreview
@@ -146,8 +201,8 @@ export function WordSearchBuilder() {
         sourceName={sourceName}
         rows={rows}
         cols={cols}
-        onRowsChange={setRows}
-        onColsChange={setCols}
+        onRowsChange={updateRows}
+        onColsChange={updateCols}
       />
       <aside className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-2xl font-bold text-slate-950">Output settings</h2>
@@ -156,7 +211,7 @@ export function WordSearchBuilder() {
             Word source
             <select
               value={selectedListId}
-              onChange={(event) => setSelectedListId(event.target.value)}
+              onChange={(event) => chooseWordList(event.target.value)}
               className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
             >
               <option value="local">Local HCE corpus</option>
@@ -175,9 +230,22 @@ export function WordSearchBuilder() {
             the API is available.
           </p>
           <DownloadButton
-            filename={`phoneme-word-search-${sourceName.toLowerCase().replaceAll(/\W+/g, "-")}.html`}
-            html={generateWordSearchHtml(activeWords)}
+            filename={generatedFilename}
+            html={generatedHtml}
           />
+          <button
+            type="button"
+            onClick={saveGeneratedOutput}
+            disabled={isSavingOutput || !activeConfigId}
+            className="w-fit rounded-md border border-teal-700 bg-white px-4 py-2.5 text-sm font-bold text-teal-800 hover:bg-teal-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
+          >
+            {isSavingOutput ? "Storing..." : "Store generated HTML"}
+          </button>
+          {outputMessage ? (
+            <p className="text-sm font-semibold text-slate-700">
+              {outputMessage}
+            </p>
+          ) : null}
           <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
             <label className="mb-4 grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
               Load saved configuration

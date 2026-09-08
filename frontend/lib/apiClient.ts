@@ -26,6 +26,15 @@ export type ApiActivityConfig = {
   createdAt: string;
   updatedAt: string;
   wordList?: ApiWordList;
+  generatedOutputs?: ApiGeneratedOutput[];
+};
+
+export type ApiGeneratedOutput = {
+  id: string;
+  filename: string;
+  html: string;
+  activityId: string;
+  createdAt: string;
 };
 
 type WordListsResponse = {
@@ -42,6 +51,10 @@ type ActivitiesResponse = {
 
 type ActivityConfigResponse = {
   activity: ApiActivityConfig;
+};
+
+type GeneratedOutputResponse = {
+  output: ApiGeneratedOutput;
 };
 
 export type WordListPayload = {
@@ -62,6 +75,11 @@ export type ActivityConfigPayload = {
   difficulty: ApiActivityConfig["difficulty"];
   wordListId: string;
   settings: Record<string, unknown>;
+};
+
+export type GeneratedOutputPayload = {
+  filename: string;
+  html: string;
 };
 
 const API_BASE_URL =
@@ -140,4 +158,16 @@ export async function createActivityConfig(payload: ActivityConfigPayload) {
     payload,
   );
   return data.activity;
+}
+
+export async function createGeneratedOutput(
+  activityId: string,
+  payload: GeneratedOutputPayload,
+) {
+  const data = await sendJson<GeneratedOutputResponse>(
+    `/activities/${encodeURIComponent(activityId)}/outputs`,
+    "POST",
+    payload,
+  );
+  return data.output;
 }

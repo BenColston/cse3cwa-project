@@ -13,6 +13,9 @@ export async function GET() {
             },
           },
         },
+        generatedOutputs: {
+          orderBy: { createdAt: "desc" },
+        },
       },
       orderBy: { updatedAt: "desc" },
     });
