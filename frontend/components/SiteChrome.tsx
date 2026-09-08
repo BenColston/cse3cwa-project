@@ -9,6 +9,7 @@ const navItems = [
   { href: "/about", label: "About" },
   { href: "/wordle", label: "Wordle" },
   { href: "/word-search", label: "Word Search" },
+  { href: "/saved-data", label: "Saved Data" },
   { href: "/settings", label: "Settings" },
 ];
 
@@ -22,7 +23,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <Link href="/" className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
-              Assessment 1
+              Assessment 2
             </p>
             <p className="truncate text-lg font-bold text-slate-950">
               Phoneme Activity Builder
@@ -78,7 +79,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>Benjamin Colston | Student number 22557298</span>
-          <span>Frontend only | React and Next.js</span>
+          <span>Frontend, API and database | React and Next.js</span>
         </div>
       </footer>
     </div>

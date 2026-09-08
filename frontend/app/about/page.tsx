@@ -3,11 +3,12 @@ import { PageIntro } from "@/components/PageIntro";
 export default function AboutPage() {
   return (
     <>
-      <PageIntro eyebrow="About" title="A frontend-only builder for Assessment 1.">
+      <PageIntro eyebrow="About" title="A data-driven builder for Assessment 2.">
         <p>
           This project is a Wordle-style web application builder for Speech
-          Pathology students and teachers. Assessment 1 focuses on responsive
-          frontend design, usability, accessibility, and component structure.
+          Pathology students and teachers. Assessment 2 extends the responsive
+          frontend from Assessment 1 with backend APIs, database storage, and
+          Docker support.
         </p>
       </PageIntro>
 
@@ -37,14 +38,14 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-slate-950">Scope</h2>
           <div className="mt-4 grid gap-4 text-slate-700 md:grid-cols-2">
             <p>
-              The Wordle tool uses one HCE phoneme target word for the first
+              The Wordle tool keeps the HCE phoneme interaction from the first
               assessment stage. Its keyboard, cells, hover labels, and feedback
-              are separated into reusable data and UI components.
+              remain separated into reusable data and UI components.
             </p>
             <p>
-              The Word Search tool uses a small fixed corpus word list and
-              produces a generated standalone HTML activity that runs in a
-              normal browser without a database.
+              The Word Search tool still produces standalone HTML activities,
+              while the Assignment 2 backend adds stored word lists and saved
+              activity settings that can drive later generation workflows.
             </p>
           </div>
         </div>

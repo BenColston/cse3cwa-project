@@ -5,17 +5,17 @@ export default function Home() {
   return (
     <>
       <PageIntro
-        eyebrow="Frontend design and usability"
-        title="Build phoneme-based classroom activities without a database."
+        eyebrow="Backend implementation and database integration"
+        title="Build phoneme-based classroom activities from stored data."
       >
         <p>
-          This Assessment 1 prototype gives Speech Pathology teachers a clear
-          workflow for choosing an activity, previewing phoneme content, and
-          downloading a single playable HTML file for classroom use.
+          This Assessment 2 version keeps the Speech Pathology activity builder
+          from Assessment 1 and adds backend storage for phoneme word lists and
+          saved activity settings.
         </p>
       </PageIntro>
 
-      <section className="mx-auto grid max-w-6xl gap-5 px-4 py-8 sm:px-6 lg:grid-cols-3">
+      <section className="mx-auto grid max-w-6xl gap-5 px-4 py-8 sm:px-6 lg:grid-cols-4">
         {[
           {
             href: "/wordle",
@@ -28,9 +28,14 @@ export default function Home() {
             body: "Generate a five-word phoneme-token word search designed for recognition practice.",
           },
           {
+            href: "/saved-data",
+            title: "Saved Data",
+            body: "Review word lists and activity configurations loaded from the backend API.",
+          },
+          {
             href: "/about",
             title: "Project Context",
-            body: "Review the frontend-only scope, student details, and video explanation space.",
+            body: "Review the project scope, student details, and video explanation space.",
           },
         ].map((item) => (
           <Link
