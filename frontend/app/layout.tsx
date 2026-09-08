@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Phoneme Activity Builder",
   description:
-    "Assessment 1 frontend builder for phoneme-based Wordle and Word Search classroom activities.",
+    "Assessment 2 data-driven builder for phoneme-based Wordle and Word Search classroom activities.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
