@@ -5,16 +5,28 @@ import { DownloadButton } from "@/components/DownloadButton";
 import { WordSearchPreview } from "@/components/WordSearchPreview";
 import { wordSearchWords } from "@/lib/activityData";
 import {
+  ApiActivityConfig,
   ApiWordList,
   createActivityConfig,
+  fetchActivityConfigs,
   fetchWordLists,
   getApiBaseUrl,
 } from "@/lib/apiClient";
 import { generateWordSearchHtml } from "@/lib/htmlGenerators";
 import { wordListToCorpusWords } from "@/lib/savedWordLists";
 
+function numberSetting(
+  settings: ApiActivityConfig["settings"],
+  key: string,
+  fallback: number,
+) {
+  const value = settings[key];
+  return typeof value === "number" ? value : fallback;
+}
+
 export function WordSearchBuilder() {
   const [savedLists, setSavedLists] = useState<ApiWordList[]>([]);
+  const [savedConfigs, setSavedConfigs] = useState<ApiActivityConfig[]>([]);
   const [selectedListId, setSelectedListId] = useState("local");
   const [savedListMessage, setSavedListMessage] = useState(
     "Loading saved word lists...",
@@ -30,13 +42,19 @@ export function WordSearchBuilder() {
 
     async function loadLists() {
       try {
-        const lists = await fetchWordLists();
+        const [lists, configs] = await Promise.all([
+          fetchWordLists(),
+          fetchActivityConfigs(),
+        ]);
 
         if (!active) {
           return;
         }
 
         setSavedLists(lists);
+        setSavedConfigs(
+          configs.filter((config) => config.type === "WORD_SEARCH"),
+        );
         setSavedListMessage(
           lists.length > 0
             ? `Loaded ${lists.length} saved word list${lists.length === 1 ? "" : "s"}.`
@@ -67,6 +85,20 @@ export function WordSearchBuilder() {
       : wordSearchWords;
   const sourceName = selectedSavedList?.name ?? "Local HCE corpus";
 
+  function loadConfiguration(configId: string) {
+    const config = savedConfigs.find((item) => item.id === configId);
+
+    if (!config) {
+      return;
+    }
+
+    setSelectedListId(config.wordListId);
+    setRows(Math.max(6, Math.min(12, numberSetting(config.settings, "rows", 8))));
+    setCols(Math.max(6, Math.min(12, numberSetting(config.settings, "cols", 8))));
+    setConfigName(config.name);
+    setConfigMessage(`Loaded configuration: ${config.name}.`);
+  }
+
   async function saveConfiguration() {
     if (!selectedSavedList) {
       setConfigMessage("Choose a saved backend word list before saving a configuration.");
@@ -81,7 +113,7 @@ export function WordSearchBuilder() {
     setIsSavingConfig(true);
 
     try {
-      await createActivityConfig({
+      const savedConfig = await createActivityConfig({
         name: configName.trim(),
         type: "WORD_SEARCH",
         difficulty: "CUSTOM",
@@ -93,6 +125,7 @@ export function WordSearchBuilder() {
           sourceName,
         },
       });
+      setSavedConfigs((configs) => [savedConfig, ...configs]);
       setConfigMessage("Word Search configuration saved.");
     } catch (error) {
       setConfigMessage(
@@ -146,6 +179,23 @@ export function WordSearchBuilder() {
             html={generateWordSearchHtml(activeWords)}
           />
           <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+            <label className="mb-4 grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
+              Load saved configuration
+              <select
+                defaultValue=""
+                onChange={(event) => loadConfiguration(event.target.value)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+              >
+                <option value="" disabled>
+                  Choose a Word Search configuration
+                </option>
+                {savedConfigs.map((config) => (
+                  <option key={config.id} value={config.id}>
+                    {config.name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
               Configuration name
               <input

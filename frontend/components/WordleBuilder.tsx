@@ -12,6 +12,7 @@ import {
   ApiActivityConfig,
   ApiWordList,
   createActivityConfig,
+  fetchActivityConfigs,
   fetchWordLists,
   getApiBaseUrl,
 } from "@/lib/apiClient";
@@ -42,8 +43,31 @@ function difficultyForApi(
   return "HARD";
 }
 
+function difficultyFromApi(
+  difficulty: ApiActivityConfig["difficulty"],
+): CorpusWord["difficulty"] {
+  if (difficulty === "MEDIUM") {
+    return "4 phonemes";
+  }
+
+  if (difficulty === "HARD") {
+    return "5 phonemes";
+  }
+
+  return "3 phonemes";
+}
+
+function stringSetting(
+  settings: ApiActivityConfig["settings"],
+  key: string,
+) {
+  const value = settings[key];
+  return typeof value === "string" ? value : "";
+}
+
 export function WordleBuilder() {
   const [savedLists, setSavedLists] = useState<ApiWordList[]>([]);
+  const [savedConfigs, setSavedConfigs] = useState<ApiActivityConfig[]>([]);
   const [selectedListId, setSelectedListId] = useState("local");
   const [savedListMessage, setSavedListMessage] = useState(
     "Loading saved word lists...",
@@ -81,13 +105,17 @@ export function WordleBuilder() {
 
     async function loadLists() {
       try {
-        const lists = await fetchWordLists();
+        const [lists, configs] = await Promise.all([
+          fetchWordLists(),
+          fetchActivityConfigs(),
+        ]);
 
         if (!active) {
           return;
         }
 
         setSavedLists(lists);
+        setSavedConfigs(configs.filter((config) => config.type === "WORDLE"));
         setSavedListMessage(
           lists.length > 0
             ? `Loaded ${lists.length} saved word list${lists.length === 1 ? "" : "s"}.`
@@ -129,6 +157,32 @@ export function WordleBuilder() {
     setTargetEnglish(firstWord.english);
   }
 
+  function loadConfiguration(configId: string) {
+    const config = savedConfigs.find((item) => item.id === configId);
+
+    if (!config) {
+      return;
+    }
+
+    const configWordList =
+      savedLists.find((list) => list.id === config.wordListId) ??
+      config.wordList;
+    const configWords = configWordList
+      ? wordListToCorpusWords(configWordList)
+      : corpusWords;
+    const requestedTarget = stringSetting(config.settings, "targetEnglish");
+    const targetWord =
+      configWords.find((word) => word.english === requestedTarget) ??
+      configWords[0] ??
+      wordleActivity.target;
+
+    setSelectedListId(config.wordListId);
+    setDifficulty(targetWord.difficulty || difficultyFromApi(config.difficulty));
+    setTargetEnglish(targetWord.english);
+    setConfigName(config.name);
+    setConfigMessage(`Loaded configuration: ${config.name}.`);
+  }
+
   async function saveConfiguration() {
     if (!selectedSavedList) {
       setConfigMessage("Choose a saved backend word list before saving a configuration.");
@@ -143,7 +197,7 @@ export function WordleBuilder() {
     setIsSavingConfig(true);
 
     try {
-      await createActivityConfig({
+      const savedConfig = await createActivityConfig({
         name: configName.trim(),
         type: "WORDLE",
         difficulty: difficultyForApi(selectedDifficulty),
@@ -155,6 +209,7 @@ export function WordleBuilder() {
           sourceName: activeSourceName,
         },
       });
+      setSavedConfigs((configs) => [savedConfig, ...configs]);
       setConfigMessage("Wordle configuration saved.");
     } catch (error) {
       setConfigMessage(
@@ -262,6 +317,23 @@ export function WordleBuilder() {
           </div>
 
           <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+            <label className="mb-4 grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
+              Load saved configuration
+              <select
+                defaultValue=""
+                onChange={(event) => loadConfiguration(event.target.value)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+              >
+                <option value="" disabled>
+                  Choose a Wordle configuration
+                </option>
+                {savedConfigs.map((config) => (
+                  <option key={config.id} value={config.id}>
+                    {config.name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
               Configuration name
               <input
