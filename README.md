@@ -2,28 +2,63 @@
 
 Benjamin Colston - 22557298
 
-## Assignment 2 direction
+## Overview
 
-This project builds on the Assignment 1 phoneme Wordle and Word Search frontend.
-Assignment 2 adds a backend, database layer, API routes, validation, and Docker
-support so activity data can be stored and reused.
+This project is the Assessment 2 version of the phoneme activity builder. It
+extends the Assignment 1 frontend with a backend API, Postgres database, Prisma
+schema, validation, Docker support, and stored activity workflows.
 
-## Current structure
+Teachers can save phoneme word lists, create Wordle or Word Search activity
+configurations from stored data, generate downloadable HTML activities, and
+store generated HTML outputs against saved activity configurations.
+
+## Project Structure
 
 ```text
 cse3cwa-project/
-  frontend/   Assignment 1 Next.js frontend application
-  api/        Backend/API service placeholder for the next step
+  frontend/   Next.js frontend for the activity builder
+  api/        Next.js API service with Prisma and Postgres integration
 ```
 
-The first Assignment 2 step is intentionally structural only. The existing
-frontend has been moved into `frontend/` so later branches can add the API,
-Postgres database, Prisma schema, and Docker Compose services as separate,
-traceable commits.
+## Main Features
 
-## Frontend
+- Phoneme word lists stored in Postgres.
+- Words store phonemes as arrays, including multi-character phoneme symbols.
+- Activity configurations store activity type, difficulty, selected word list,
+  and JSON settings.
+- Generated HTML outputs can be stored and downloaded from saved activities.
+- Wordle and Word Search builders can load saved backend word lists.
+- Saved configurations can be reloaded into the builders.
+- `/health` endpoint returns `200 OK` when the API is running.
+- Docker Compose runs the frontend, API, and database together.
 
-Run the existing Assignment 1 frontend from the `frontend/` directory:
+## Docker Run
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+```text
+Frontend: http://localhost:3000
+API health: http://localhost:4080/health
+```
+
+The API container runs `npx prisma db push` before startup so a fresh Docker
+Postgres database is synced with the Prisma schema.
+
+To stop the stack:
+
+```bash
+docker compose down
+```
+
+## Local Development
+
+Frontend:
 
 ```bash
 cd frontend
@@ -31,60 +66,97 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
-
-## Docker base
-
-The project now has a three-service Docker Compose foundation:
-
-```text
-frontend  Next.js user interface, exposed on FRONTEND_PORT or 3000
-api       Next.js backend/API service, exposed on API_PORT or 4080
-db        Postgres database service, exposed on POSTGRES_PORT or 5432
-```
-
-Example local Docker command:
-
-```bash
-docker compose up --build
-```
-
-The API health check should then be available at
-`http://localhost:4080/health`.
-
-For an AWS Academy EC2 demonstration, `FRONTEND_PORT` can be set to `80` so the
-frontend is available over the standard HTTP port.
-
-## Database foundation
-
-The API service uses Prisma with Postgres. The initial schema stores phoneme word
-lists, words with phoneme arrays, activity configurations, and generated HTML
-records.
-
-Useful API project commands:
+API:
 
 ```bash
 cd api
 copy .env.example .env
-npm run prisma:validate
+npm install
 npm run prisma:generate
 npm run db:push
+npm run dev
 ```
 
-## API endpoints
+The frontend expects the API at `http://localhost:4080` by default. This can be
+changed with `NEXT_PUBLIC_API_BASE_URL`.
 
-Current backend routes:
+## Database Model
+
+The Prisma schema includes:
+
+- `WordList` for teacher-created phoneme word lists.
+- `WordEntry` for words and their phoneme arrays.
+- `ActivityConfig` for Wordle and Word Search settings.
+- `GeneratedOutput` for stored downloadable HTML output.
+
+The schema is in:
+
+```text
+api/prisma/schema.prisma
+```
+
+## API Endpoints
 
 ```text
 GET     /health
+
 GET     /word-lists
 POST    /word-lists
 GET     /word-lists/:id
 PUT     /word-lists/:id
 DELETE  /word-lists/:id
+
 GET     /activities
 POST    /activities
 GET     /activities/:id
 PUT     /activities/:id
 DELETE  /activities/:id
+
+GET     /activities/:id/outputs
+POST    /activities/:id/outputs
 ```
+
+The API includes validation and consistent JSON error responses.
+
+## Demonstration Workflow
+
+1. Open `http://localhost:3000/saved-data`.
+2. Save a phoneme word list.
+3. Open the Wordle or Word Search builder.
+4. Select the saved backend word list.
+5. Save an activity configuration.
+6. Load the saved configuration.
+7. Store generated HTML.
+8. Return to Saved Data and download the stored HTML output.
+
+## Verification Commands
+
+Frontend:
+
+```bash
+cd frontend
+npm run lint
+npm run build
+```
+
+API:
+
+```bash
+cd api
+npm run lint
+npm run build
+npm run prisma:validate
+```
+
+Docker:
+
+```bash
+docker compose up --build
+```
+
+## Submission Notes
+
+- Do not include `node_modules` in the submitted zip.
+- Include the GitHub repository link.
+- The video demonstration should show the student ID, Docker run, health check,
+  backend CRUD workflow, configuration save/load, and stored generated HTML.
