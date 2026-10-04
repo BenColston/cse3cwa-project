@@ -19,6 +19,13 @@ enum DifficultyLevel {
   CUSTOM
 }
 
+enum UsageEventType {
+  PAGE_VIEW
+  ACTIVITY_USED
+  GENERATION_SUCCEEDED
+  GENERATION_FAILED
+}
+
 model WordList {
   id          String           @id @default(cuid())
   name        String
@@ -72,4 +79,15 @@ model GeneratedOutput {
   activity   ActivityConfig @relation(fields: [activityId], references: [id], onDelete: Cascade)
 
   @@index([activityId])
+}
+
+model UsageEvent {
+  id           String         @id @default(cuid())
+  eventType    UsageEventType
+  activityType ActivityType?
+  durationMs   Int?
+  createdAt    DateTime       @default(now())
+
+  @@index([eventType, createdAt])
+  @@index([activityType, eventType])
 }

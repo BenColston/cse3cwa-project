@@ -99,6 +99,8 @@ api/prisma/schema.prisma
 
 ```text
 GET     /health
+GET     /metrics
+POST    /metrics/events
 
 GET     /word-lists
 POST    /word-lists
@@ -117,6 +119,28 @@ POST    /activities/:id/outputs
 ```
 
 The API includes validation and consistent JSON error responses.
+
+### Operational metrics
+
+`GET /metrics` returns word-list and activity-configuration totals, saved
+successful outputs, failed generation events, average recorded page duration,
+and activity-use counts by type. Activity use and page duration are based on
+persisted `UsageEvent` records; the dashboard can submit these through
+`POST /metrics/events`.
+
+Supported event payloads:
+
+```json
+{ "eventType": "PAGE_VIEW", "durationMs": 42000 }
+{ "eventType": "ACTIVITY_USED", "activityType": "WORDLE" }
+{ "eventType": "GENERATION_SUCCEEDED", "activityType": "WORDLE" }
+{ "eventType": "GENERATION_FAILED", "activityType": "WORD_SEARCH" }
+```
+
+Page durations are limited to one day per event. Activity type is required for
+activity-use and generation events. Successful and failed generation attempts
+are counted from their respective events; stored downloadable HTML files are
+reported separately.
 
 ## Demonstration Workflow
 
