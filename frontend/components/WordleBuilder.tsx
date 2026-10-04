@@ -358,6 +358,7 @@ export function WordleBuilder() {
             <DownloadButton
               filename={generatedFilename}
               html={generatedHtml}
+              activityType="WORDLE"
             />
             <button
               type="button"

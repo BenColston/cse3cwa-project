@@ -124,9 +124,8 @@ The API includes validation and consistent JSON error responses.
 
 `GET /metrics` returns word-list and activity-configuration totals, saved
 successful outputs, failed generation events, average recorded page duration,
-and activity-use counts by type. Activity use and page duration are based on
-persisted `UsageEvent` records; the dashboard can submit these through
-`POST /metrics/events`.
+and activity-use counts by type. The frontend records builder visits, visible
+page duration, and HTML download outcomes through `POST /metrics/events`.
 
 Supported event payloads:
 
