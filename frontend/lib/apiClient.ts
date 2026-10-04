@@ -82,6 +82,16 @@ export type GeneratedOutputPayload = {
   html: string;
 };
 
+export type UsageEventPayload = {
+  eventType:
+    | "PAGE_VIEW"
+    | "ACTIVITY_USED"
+    | "GENERATION_SUCCEEDED"
+    | "GENERATION_FAILED";
+  activityType?: ApiActivityConfig["type"];
+  durationMs?: number;
+};
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4080";
 
@@ -140,6 +150,25 @@ async function sendJson<T>(
 
 export function getApiBaseUrl() {
   return API_BASE_URL;
+}
+
+export async function recordUsageEvent(
+  payload: UsageEventPayload,
+  keepalive = false,
+) {
+  try {
+    await fetch(`${API_BASE_URL}/metrics/events`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      keepalive,
+    });
+  } catch {
+    // Analytics must not interrupt the builder if the API is unavailable.
+  }
 }
 
 export async function fetchWordLists() {

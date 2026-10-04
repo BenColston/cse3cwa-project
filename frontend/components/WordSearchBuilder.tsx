@@ -232,6 +232,7 @@ export function WordSearchBuilder() {
           <DownloadButton
             filename={generatedFilename}
             html={generatedHtml}
+            activityType="WORD_SEARCH"
           />
           <button
             type="button"
