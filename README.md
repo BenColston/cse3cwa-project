@@ -195,6 +195,10 @@ with `npm run test:e2e:report` from `frontend`.
 
 ## Submission Notes
 
+JMeter load-test setup, stage commands, and report guidance are in
+[testing/jmeter/README.md](testing/jmeter/README.md). Start with its one-user
+smoke test before increasing the traffic level.
+
 - Do not include `node_modules` in the submitted zip.
 - Include the GitHub repository link.
 - The video demonstration should show the student ID, Docker run, health check,
