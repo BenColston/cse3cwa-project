@@ -117,7 +117,7 @@ test("teachers can create, read, update, and delete a saved phoneme word list", 
 test("teachers can generate and play the standalone Wordle activity", async ({
   page,
   request,
-}) => {
+}, testInfo) => {
   await waitForApi(request);
   const activityUsed = usageEvent(page, "ACTIVITY_USED");
   await page.goto("/wordle");
@@ -134,12 +134,14 @@ test("teachers can generate and play the standalone Wordle activity", async ({
   ]);
   expect(downloadedFile.suggestedFilename()).toMatch(/\.html$/i);
   expect(generationResponse.status()).toBe(201);
-  await expect(page.getByRole("status")).toContainText("HTML download started");
+  await expect(
+    page.getByRole("status").filter({ hasText: "HTML download started." }),
+  ).toBeVisible();
 
-  const htmlPath = await downloadedFile.path();
-  expect(htmlPath).not.toBeNull();
+  const htmlPath = testInfo.outputPath(downloadedFile.suggestedFilename());
+  await downloadedFile.saveAs(htmlPath);
   const activityPage = await page.context().newPage();
-  await activityPage.goto(pathToFileURL(htmlPath!).href);
+  await activityPage.goto(pathToFileURL(htmlPath).href);
   await expect(activityPage).toHaveTitle(/Wordle/i);
   await expect(
     activityPage.getByRole("heading", { name: "HCE Phoneme Wordle" }),
@@ -160,7 +162,7 @@ test("teachers can generate and play the standalone Wordle activity", async ({
   await expect(activityPage.getByRole("status")).toContainText("Correct.");
 
   const pageViewEvent = usageEvent(page, "PAGE_VIEW");
-  await page.goto("/");
+  await page.getByRole("link", { name: "Home", exact: true }).click();
   expect((await pageViewEvent).status()).toBe(201);
   await activityPage.close();
 });
