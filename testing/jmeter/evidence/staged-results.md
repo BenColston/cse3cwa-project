@@ -11,11 +11,15 @@ Word Search workflows were included.
 | 10 | 10 | 4 | 10 | 220 | 0 | 11.23 | 20 | 19.47 |
 | 100 | 100 | 12 | 30 | 2,200 | 0 | 10.32 | 19 | 68.96 |
 | 1,000 | 1,000 | 29 | 120 | 22,000 | 0 | 13.45 | 29 | 180.11 |
+| 10,000 | 10,000 | 389 | 600 | 207,680 | 3,903 | 723.62 | 7,351 | 338.29 |
 
-Every stage completed the expected user and request counts. Response checks
+The 10-, 100- and 1,000-user stages completed the expected user and request counts. Response checks
 verified the status codes, phoneme data, related activity IDs and exact stored
-HTML content. The recorded error rate was 0% for all three stages. After the
-last stage, `/health` returned 200 and no `JMeter ...` word lists remained.
+HTML content. Their recorded error rate was 0%. The 10,000-user stage launched
+all its users but recorded a 1.88% error rate and skipped dependent requests
+after failed word-list creation. It did not pass. See
+[the detailed 10,000-user findings](users-10000-findings.md) for errors, recovery
+and limitations. After its cleanup, `/health` returned 200 and no test lists remained.
 
 ## Interpretation
 
@@ -26,12 +30,16 @@ HTTP sample data. The 1,000-user stage therefore tested 1,000 users over time,
 with an observed peak of 29 active users, rather than 1,000 simultaneous users.
 
 Measured throughput rose as the planned arrival rate increased. At the highest
-stage, average HTTP response time was 13.45 ms and 95% of requests completed
-within 29 ms. No failed responses or content assertions were recorded. The small
+passing stage, average HTTP response time was 13.45 ms and 95% of requests completed
+within 29 ms. At 10,000 configured users, average elapsed time increased to
+723.62 ms and timeouts occurred. The table's p95 uses the runner's nearest-rank
+calculation over all samples; the JMeter dashboard's windowed estimate can
+differ, as explained in the detailed findings. The small
 difference between the first two stages does not show that more load improves
 performance; warm caches and normal timing variation can affect short runs.
 
-These results establish successful operation for this finite, ramped workload.
+The first three stages establish successful operation for their finite, ramped workloads;
+the last demonstrates degraded behaviour under its larger workload.
 They do not establish maximum capacity, the breaking point, or sustained
 1,000-user concurrency. To test that separately, use longer workflows or a
 duration-based profile and verify its actual active-thread graph.
@@ -42,7 +50,7 @@ the browser generation/download/gameplay workflow.
 
 ## Evidence Files
 
-- `users-10-summary.json`, `users-100-summary.json`, `users-1000-summary.json`
+- `users-10-summary.json`, `users-100-summary.json`, `users-1000-summary.json`, `users-10000-summary.json`
   contain measured settings and per-request statistics.
 - `staged-comparison.csv` provides the overall comparison.
 - `users-1000-generator-snapshot.json` records one observation of the Java load
@@ -61,6 +69,7 @@ under `testing/jmeter/results` (ignored by Git):
 | 10 | `users-10-20261006-004334-24bc44` |
 | 100 | `users-100-20261006-004429-540b91` |
 | 1,000 | `users-1000-20261006-004548-767bfa` |
+| 10,000 | `users-10000-20261006-010048-4fd24f` |
 
 Open `report/index.html` in each run folder to show the JMeter dashboard, request
 statistics and active-thread graph in the video. Keep these raw results with
@@ -74,6 +83,7 @@ From the project root, with the app running and fixtures exported:
 ./testing/jmeter/run-load-test.ps1 -Users 10 -Loops 2 -RampUp 10
 ./testing/jmeter/run-load-test.ps1 -Users 100 -Loops 2 -RampUp 30
 ./testing/jmeter/run-load-test.ps1 -Users 1000 -Loops 2 -RampUp 120
+./testing/jmeter/run-load-test.ps1 -Users 10000 -Loops 2 -RampUp 600
 ```
 
 Run one command at a time and review its results before increasing the load.

@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-05T14:19:04.2983814Z",
+  "runStartedAt": "2026-10-05T14:00:54.0000000+00:00",
+  "filterEndsAt": "2026-10-05T14:18:46.2702395+00:00",
+  "matchingRecordsInRunWindow": 1540,
+  "deletedRecords": 1540,
+  "remainingTestRecords": 0,
+  "healthStatus": 200,
+  "note": "Only records matching the run time window, generated UUID name, source and test description were deleted. A backup is retained in the raw run folder."
+}

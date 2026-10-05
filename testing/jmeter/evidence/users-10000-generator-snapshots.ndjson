@@ -1,0 +1,4 @@
+{"capturedAt":"2026-10-05T14:02:31.1157976Z","processId":41248,"cpuSeconds":102.48,"workingSetMB":1524.27,"nativeThreadCount":8767,"logicalProcessors":12}
+{"capturedAt":"2026-10-05T14:06:20.2466532Z","processId":41248,"cpuSeconds":211.94,"workingSetMB":1474.71,"nativeThreadCount":4933,"logicalProcessors":12}
+{"capturedAt":"2026-10-05T14:09:09.2486308Z","processId":41248,"cpuSeconds":274.67,"workingSetMB":1362.68,"nativeThreadCount":2121,"logicalProcessors":12}
+{"capturedAt":"2026-10-05T14:11:15.8886804Z","processId":41248,"cpuSeconds":322.03,"workingSetMB":1294.84,"nativeThreadCount":41,"logicalProcessors":12}
