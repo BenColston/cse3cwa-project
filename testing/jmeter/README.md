@@ -65,6 +65,10 @@ thinking are not included in individual HTTP response times.
 
 ## Staged Load
 
+The completed 10-, 100- and 1,000-user runs and their measured concurrency are
+documented in [evidence/staged-results.md](evidence/staged-results.md). Selected
+JSON summaries and a comparison CSV are saved alongside that document.
+
 The verified one-user baseline is saved in
 [evidence/smoke-summary.json](evidence/smoke-summary.json): two iterations,
 both activity types, 22 HTTP samples and zero failures. This is a functional
