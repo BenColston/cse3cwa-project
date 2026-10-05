@@ -177,6 +177,22 @@ Docker:
 docker compose up --build
 ```
 
+Browser tests:
+
+```bash
+cd frontend
+npm install
+npm run test:e2e:install
+npm run test:e2e
+```
+
+Run the Docker Compose stack from the project root before starting the browser
+tests. They use the frontend at `http://localhost:3000` and API at
+`http://localhost:4080`; the word-list test creates and deletes its own test
+record. Playwright saves failure traces, screenshots, videos, and an HTML report
+under `frontend/test-results` and `frontend/playwright-report`. Open the report
+with `npm run test:e2e:report` from `frontend`.
+
 ## Submission Notes
 
 - Do not include `node_modules` in the submitted zip.
