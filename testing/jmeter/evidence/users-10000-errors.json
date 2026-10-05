@@ -1,0 +1,10 @@
+[
+  {
+    "requestAndError": "Create word list | Non HTTP response code: java.net.SocketTimeoutException",
+    "count": 1540
+  },
+  {
+    "requestAndError": "Health | Non HTTP response code: java.net.SocketTimeoutException",
+    "count": 2363
+  }
+]

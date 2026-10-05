@@ -84,6 +84,10 @@ function Get-SampleSummary($items) {
 }
 
 $overall = Get-SampleSummary $samples
+$observedThreadNames = [System.Collections.Generic.HashSet[string]]::new()
+foreach ($sample in $samples) {
+    $null = $observedThreadNames.Add($sample.threadName)
+}
 $summary = [ordered]@{
     recordedAt = (Get-Date).ToUniversalTime().ToString('o')
     javaVersion = $javaVersion
@@ -91,7 +95,7 @@ $summary = [ordered]@{
     loopsPerUser = $Loops
     rampUpSeconds = $RampUp
     thinkTimeMs = $ThinkMs
-    observedUsers = @($samples | Select-Object -ExpandProperty threadName -Unique).Count
+    observedUsers = $observedThreadNames.Count
     peakActiveUsers = ($samples | ForEach-Object { [int]$_.allThreads } | Measure-Object -Maximum).Maximum
     expectedSamples = $Users * $Loops * 11
     frontend = 'http://localhost:3000'
