@@ -1,0 +1,160 @@
+{
+  "recordedAt": "2026-10-05T13:45:12.9464011Z",
+  "javaVersion": "openjdk version \"17.0.20.1\" 2026-08-18\r\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\r\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+  "users": 100,
+  "loopsPerUser": 2,
+  "rampUpSeconds": 30,
+  "thinkTimeMs": 100,
+  "observedUsers": 100,
+  "peakActiveUsers": 12.0,
+  "expectedSamples": 2200,
+  "frontend": "http://localhost:3000",
+  "api": "http://localhost:4080",
+  "overall": {
+    "samples": 2200,
+    "failures": 0,
+    "errorPercent": 0.0,
+    "averageMs": 10.32,
+    "p95Ms": 19.0,
+    "requestsPerSecond": 68.96,
+    "durationSeconds": 31.9
+  },
+  "byRequest": [
+    {
+      "label": "Builder page",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 4.16,
+        "p95Ms": 6.0,
+        "requestsPerSecond": 6.53,
+        "durationSeconds": 30.62
+      }
+    },
+    {
+      "label": "Create activity",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 13.33,
+        "p95Ms": 21.0,
+        "requestsPerSecond": 6.53,
+        "durationSeconds": 30.61
+      }
+    },
+    {
+      "label": "Create word list",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 12.29,
+        "p95Ms": 17.0,
+        "requestsPerSecond": 6.53,
+        "durationSeconds": 30.62
+      }
+    },
+    {
+      "label": "Delete activity",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 10.64,
+        "p95Ms": 17.0,
+        "requestsPerSecond": 6.54,
+        "durationSeconds": 30.59
+      }
+    },
+    {
+      "label": "Delete word list",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 10.88,
+        "p95Ms": 17.0,
+        "requestsPerSecond": 6.54,
+        "durationSeconds": 30.59
+      }
+    },
+    {
+      "label": "Health",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 5.65,
+        "p95Ms": 10.0,
+        "requestsPerSecond": 6.5,
+        "durationSeconds": 30.75
+      }
+    },
+    {
+      "label": "Read activity",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 9.7,
+        "p95Ms": 16.0,
+        "requestsPerSecond": 6.54,
+        "durationSeconds": 30.6
+      }
+    },
+    {
+      "label": "Read generated HTML",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 9.17,
+        "p95Ms": 15.0,
+        "requestsPerSecond": 6.54,
+        "durationSeconds": 30.6
+      }
+    },
+    {
+      "label": "Read word list",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 7.56,
+        "p95Ms": 13.0,
+        "requestsPerSecond": 6.54,
+        "durationSeconds": 30.6
+      }
+    },
+    {
+      "label": "Store generated HTML",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 13.23,
+        "p95Ms": 23.0,
+        "requestsPerSecond": 6.54,
+        "durationSeconds": 30.6
+      }
+    },
+    {
+      "label": "Update word list",
+      "statistics": {
+        "samples": 200,
+        "failures": 0,
+        "errorPercent": 0.0,
+        "averageMs": 16.88,
+        "p95Ms": 25.0,
+        "requestsPerSecond": 6.53,
+        "durationSeconds": 30.61
+      }
+    }
+  ],
+  "activityTypes": [
+    "WORD_SEARCH",
+    "WORDLE"
+  ]
+}

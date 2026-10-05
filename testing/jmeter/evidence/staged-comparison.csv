@@ -1,0 +1,4 @@
+"users","observedUsers","peakActiveUsers","samples","failures","averageMs","p95Ms","requestsPerSecond","durationSeconds"
+"10","10","4","220","0","11.23","20","19.47","11.3"
+"100","100","12","2200","0","10.32","19","68.96","31.9"
+"1000","1000","29","22000","0","13.45","29","180.11","122.15"

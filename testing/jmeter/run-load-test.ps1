@@ -79,6 +79,7 @@ function Get-SampleSummary($items) {
         averageMs = [Math]::Round(($times | Measure-Object -Average).Average, 2)
         p95Ms = $times[[Math]::Ceiling($times.Count * 0.95) - 1]
         requestsPerSecond = [Math]::Round($items.Count / $seconds, 2)
+        durationSeconds = [Math]::Round($seconds, 2)
     }
 }
 
@@ -90,6 +91,9 @@ $summary = [ordered]@{
     loopsPerUser = $Loops
     rampUpSeconds = $RampUp
     thinkTimeMs = $ThinkMs
+    observedUsers = @($samples | Select-Object -ExpandProperty threadName -Unique).Count
+    peakActiveUsers = ($samples | ForEach-Object { [int]$_.allThreads } | Measure-Object -Maximum).Maximum
+    expectedSamples = $Users * $Loops * 11
     frontend = 'http://localhost:3000'
     api = 'http://localhost:4080'
     overall = $overall
@@ -103,3 +107,6 @@ $overall | ConvertTo-Json | Write-Host
 Write-Host "Results: $runDirectory"
 Write-Host "HTML report: $runDirectory/report/index.html"
 if ($overall.failures -gt 0) { throw 'Some requests failed. Review failureMessage in samples.jtl before increasing the load.' }
+if ($samples.Count -ne $summary.expectedSamples -or $summary.observedUsers -ne $Users) {
+    throw 'The run did not complete the expected users and workflow requests. Review jmeter.log and samples.jtl.'
+}
