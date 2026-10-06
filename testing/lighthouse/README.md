@@ -63,17 +63,19 @@ saved dataset, alert, validation error, or theme.
 Manual work still needed:
 
 - Full keyboard-only navigation, visible focus, and logical focus order.
-- Keyboard-only word selection: the current Word Search game has pointer-drag
-  handlers but no equivalent keyboard selection handlers, in both the preview
-  and downloaded activity. Lighthouse's 100 score does not detect this gap.
+- Screen-reader usability testing of the new keyboard word selection. Both
+  versions now support it; see [keyboard refinement evidence](evidence/word-search-keyboard.md).
 - Screen-reader review of phoneme pronunciation, guess feedback, word-search
   coordinates, and success/error announcements.
 - Dark-theme contrast, zoom/reflow, narrow layouts, and larger grids.
 - Feedback that communicates cell results without relying on colour alone.
 
-The regression tests confirm accessible names on the repaired controls and
-keyboard editing/regeneration of the downloaded textarea, not keyboard
-completion of the Word Search game.
+The label regressions confirm accessible names on the repaired controls and
+keyboard editing/regeneration of the downloaded textarea. The additional
+`frontend/e2e/word-search-accessibility.spec.ts` tests verify keyboard word
+selection, cancellation, focus navigation, and exact-instance pointer dragging
+in both the preview and downloaded game. The original baseline/after evidence
+is preserved unchanged; the keyboard stage has its own summary and reports.
 
 ## Sources
 

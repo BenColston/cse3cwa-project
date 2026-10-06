@@ -47,6 +47,8 @@ function documentShell(title: string, body: string, script = "") {
     .absent { background: #e2e8f0; border-color: #94a3b8; color: #334155; }
     .grid { display: grid; gap: 4px; max-width: 520px; }
     .grid.word-search { touch-action: none; }
+    .grid.word-search [role="row"], .grid.word-search [role="gridcell"] { display: contents; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .selected { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
     .found { background: #d1fae5; border-color: #10b981; color: #064e3b; }
     .answer { background: #ccfbf1; border-color: #0f766e; color: #134e4a; }
@@ -191,7 +193,8 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           <div id="wordList"></div>
         </div>
         <div>
-          <div id="grid" class="grid word-search" aria-label="Phoneme word search grid"></div>
+          <p id="gridInstructions" class="sr-only">Use arrow keys to move between tiles. Enter or Space starts a selection; move to the last tile and press Enter or Space again to check it. Escape cancels. Tab leaves the grid. Pointer dragging is also available.</p>
+          <div id="grid" class="grid word-search" role="grid" aria-label="Phoneme word search grid" aria-describedby="gridInstructions"></div>
           <p id="selectionFeedback" role="status" class="muted">Drag across the grid to find a phoneme sequence.</p>
         </div>
       </div>
@@ -201,6 +204,8 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
       let showAnswers = false;
       let puzzle = ${JSON.stringify(initialPuzzle)};
       let selecting = false;
+      let selectionMode = null;
+      let focusedCell = { row: 0, col: 0 };
       let selectionStart = null;
       let selectedPath = [];
       let foundSelections = [];
@@ -257,12 +262,14 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
 
       function clearSelection() {
         selecting = false;
+        selectionMode = null;
         selectionStart = null;
         selectedPath = [];
         renderPuzzle();
       }
 
       function finishSelection(event) {
+        if (!selectionMode) return;
         const cell = event && event.target.closest('[data-row]');
         const finalPath = selectionStart && cell
           ? getPath(selectionStart, { row: Number(cell.dataset.row), col: Number(cell.dataset.col) })
@@ -270,6 +277,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
 
         if (finalPath.length === 0) {
           clearSelection();
+          document.getElementById('selectionFeedback').textContent = 'Choose a straight horizontal, vertical, or diagonal path.';
           return;
         }
 
@@ -292,6 +300,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         }
 
         selecting = false;
+        selectionMode = null;
         selectionStart = null;
         selectedPath = [];
         renderPuzzle();
@@ -334,13 +343,38 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
           solutions
         };
         foundSelections = [];
+        selecting = false;
+        selectionMode = null;
+        selectionStart = null;
+        selectedPath = [];
+        focusedCell = { row: 0, col: 0 };
         renderPuzzle(words);
       }
 
       function renderPuzzle(words = parseWords()) {
         const grid = document.getElementById('grid');
-        grid.innerHTML = '';
         grid.style.gridTemplateColumns = 'repeat(' + puzzle.grid[0].length + ', minmax(36px, 1fr))';
+        const dimensions = puzzle.grid.length + '-' + puzzle.grid[0].length;
+        // Retain existing buttons on ordinary updates so keyboard focus survives.
+        if (grid.dataset.dimensions !== dimensions) {
+          grid.innerHTML = '';
+          grid.dataset.dimensions = dimensions;
+          puzzle.grid.forEach((row, rowIndex) => {
+            const gridRow = document.createElement('div');
+            gridRow.setAttribute('role', 'row');
+            row.forEach((_, colIndex) => {
+              const gridCell = document.createElement('div');
+              gridCell.setAttribute('role', 'gridcell');
+              const button = document.createElement('button');
+              button.type = 'button';
+              button.dataset.row = String(rowIndex);
+              button.dataset.col = String(colIndex);
+              gridCell.appendChild(button);
+              gridRow.appendChild(gridCell);
+            });
+            grid.appendChild(gridRow);
+          });
+        }
         const answerCells = new Set(puzzle.solutions.flatMap((solution) => solution.coords.map((coord) => coord.row + '-' + coord.col)));
         const selectedCells = new Set(selectedPath.map((coord) => coordKey(coord.row, coord.col)));
         const foundCells = new Set(foundSelections
@@ -348,16 +382,15 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         puzzle.grid.forEach((row, rowIndex) => {
           row.forEach((phoneme, colIndex) => {
             const key = coordKey(rowIndex, colIndex);
-            const cell = document.createElement('button');
-            cell.type = 'button';
-            cell.dataset.row = String(rowIndex);
-            cell.dataset.col = String(colIndex);
+            const cell = grid.querySelector('[data-row="' + rowIndex + '"][data-col="' + colIndex + '"]');
+            cell.tabIndex = rowIndex === focusedCell.row && colIndex === focusedCell.col ? 0 : -1;
+            cell.setAttribute('aria-label', 'Row ' + (rowIndex + 1) + ', column ' + (colIndex + 1) + ': /' + phoneme + '/' + (foundCells.has(key) ? ', found' : ''));
+            cell.parentElement.setAttribute('aria-selected', String(selectedCells.has(key)));
             cell.className = 'cell'
               + (foundCells.has(key) ? ' found' : '')
               + (selectedCells.has(key) ? ' selected' : '')
               + (showAnswers && answerCells.has(key) ? ' answer' : '');
             cell.textContent = phoneme;
-            grid.appendChild(cell);
           });
         });
         document.getElementById('wordList').innerHTML = words
@@ -369,13 +402,14 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         const cell = event.target.closest('[data-row]');
         if (!cell) return;
         selecting = true;
+        selectionMode = 'pointer';
         selectionStart = { row: Number(cell.dataset.row), col: Number(cell.dataset.col) };
         selectedPath = [selectionStart];
         renderPuzzle();
       });
 
       document.getElementById('grid').addEventListener('pointerover', (event) => {
-        if (!selecting || !selectionStart) return;
+        if (!selecting || selectionMode !== 'pointer' || !selectionStart) return;
         const cell = event.target.closest('[data-row]');
         if (!cell) return;
         const path = getPath(selectionStart, { row: Number(cell.dataset.row), col: Number(cell.dataset.col) });
@@ -385,9 +419,58 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
         }
       });
 
-      document.getElementById('grid').addEventListener('pointerup', finishSelection);
-      document.getElementById('grid').addEventListener('pointerleave', clearSelection);
-      document.getElementById('grid').addEventListener('pointercancel', clearSelection);
+      document.getElementById('grid').addEventListener('pointerup', (event) => {
+        if (selectionMode === 'pointer') finishSelection(event);
+      });
+      document.getElementById('grid').addEventListener('pointerleave', () => {
+        if (selectionMode === 'pointer') clearSelection();
+      });
+      document.getElementById('grid').addEventListener('pointercancel', () => {
+        if (selectionMode === 'pointer') clearSelection();
+      });
+      document.getElementById('grid').addEventListener('focusin', (event) => {
+        const cell = event.target.closest('[data-row][data-col]');
+        if (!cell) return;
+        focusedCell = { row: Number(cell.dataset.row), col: Number(cell.dataset.col) };
+        document.querySelectorAll('#grid button').forEach((button) => { button.tabIndex = button === cell ? 0 : -1; });
+      });
+      document.getElementById('grid').addEventListener('focusout', (event) => {
+        if (selectionMode === 'keyboard' && !event.currentTarget.contains(event.relatedTarget)) clearSelection();
+      });
+      document.getElementById('grid').addEventListener('keydown', (event) => {
+        const cell = event.target.closest('[data-row][data-col]');
+        if (!cell) return;
+        const coord = { row: Number(cell.dataset.row), col: Number(cell.dataset.col) };
+        const steps = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+        const step = steps[event.key];
+        if (step) {
+          event.preventDefault();
+          const next = {
+            row: Math.max(0, Math.min(puzzle.grid.length - 1, coord.row + step[0])),
+            col: Math.max(0, Math.min(puzzle.grid[0].length - 1, coord.col + step[1]))
+          };
+          if (selectionMode === 'keyboard') selectedPath = getPath(selectionStart, next);
+          document.querySelector('#grid [data-row="' + next.row + '"][data-col="' + next.col + '"]').focus();
+          renderPuzzle();
+        } else if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          if (event.repeat) return;
+          if (selectionMode === 'keyboard') {
+            finishSelection(event);
+          } else {
+            selectionMode = 'keyboard';
+            selecting = false;
+            selectionStart = coord;
+            selectedPath = [coord];
+            document.getElementById('selectionFeedback').textContent = 'Selection started at row ' + (coord.row + 1) + ', column ' + (coord.col + 1) + '.';
+            renderPuzzle();
+          }
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          clearSelection();
+          document.getElementById('selectionFeedback').textContent = 'Selection cancelled.';
+        }
+      });
 
       document.getElementById('generateBtn').addEventListener('click', () => {
         seed += 1;
