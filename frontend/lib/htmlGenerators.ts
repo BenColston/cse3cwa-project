@@ -95,7 +95,7 @@ export function generateWordleHtml(activity = wordleActivity) {
       <p class="muted">HCE phoneme Wordle classroom activity</p>
       <h1>${escapeHtml(activity.title)}</h1>
       <p>Choose phonemes from the keyboard to match the target sequence. Hover over hint chips or keyboard buttons for phoneme-to-English equivalence.</p>
-      <div class="row" aria-label="Target phoneme hints">${targetHints}</div>
+      <div class="row" role="group" aria-label="Target phoneme hints">${targetHints}</div>
       <h2>Guesses</h2>
       <div id="board">${rows}</div>
       <p id="feedback" role="status" class="muted">Choose ${target.phonemes.length} phonemes, then check your answer.</p>
@@ -177,7 +177,7 @@ export function generateWordSearchHtml(words: CorpusWord[] = wordSearchWords) {
       <p>Find the phoneme sequences in the grid. Each cell contains one phoneme unit, including multi-character phonemes such as /tʃ/ or /æɪ/.</p>
       <div class="layout">
         <div>
-          <label><strong>Words as space-separated phonemes</strong></label>
+          <label for="wordInput"><strong>Words as space-separated phonemes</strong></label>
           <textarea id="wordInput">${escapeHtml(wordLines)}</textarea>
           <div class="actions">
             <label>Rows <input id="rows" type="number" min="6" max="12" value="8"></label>

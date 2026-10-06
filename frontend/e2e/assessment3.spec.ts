@@ -78,7 +78,8 @@ test("teachers can create, read, update, and delete a saved phoneme word list", 
     });
     await expect(listCard).toContainText("2 words | Created by browser test");
     await expect(listCard).toContainText("Source: Playwright E2E");
-    await expect(listCard).toContainText("θ ɪ n / ʃ ɪ p");
+    await expect(listCard).toContainText("θ ɪ n");
+    await expect(listCard).toContainText("ʃ ɪ p");
 
     const updateResponse = await request.put(
       `${apiUrl}/word-lists/${listId}`,

@@ -1,0 +1,169 @@
+{
+  "label": "after",
+  "startedAt": "2026-10-06T19:28:47.570Z",
+  "baseUrl": "http://localhost:3000",
+  "apiUrl": "http://localhost:4080",
+  "results": [
+    {
+      "page": "home",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:28:49.898Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "home-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "about",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:28:56.271Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "about-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "wordle",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:02.764Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "wordle-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "word-search",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:09.222Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "word-search-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "saved-data",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:15.620Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "saved-data-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "settings",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:22.136Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "settings-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-wordle",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:28.574Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-wordle-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-word-search",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:34.820Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-word-search-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "home",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:41.326Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "home-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "about",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:50.529Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "about-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "wordle",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:29:57.546Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "wordle-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "word-search",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:30:04.234Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "word-search-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "saved-data",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:30:11.129Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "saved-data-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "settings",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:30:18.166Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "settings-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-wordle",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:30:24.872Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-wordle-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-word-search",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:30:31.331Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-word-search-mobile.html",
+      "failedAudits": []
+    }
+  ],
+  "finishedAt": "2026-10-06T19:30:36.041Z"
+}

@@ -195,6 +195,9 @@ with `npm run test:e2e:report` from `frontend`.
 
 ## Submission Notes
 
+Lighthouse accessibility audits, before-and-after evidence, and manual-check
+limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
+
 JMeter load-test setup, stage commands, and report guidance are in
 [testing/jmeter/README.md](testing/jmeter/README.md). Start with its one-user
 smoke test before increasing the traffic level.

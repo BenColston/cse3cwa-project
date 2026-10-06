@@ -280,10 +280,11 @@ export function WordleBuilder() {
         <h2 className="text-2xl font-bold text-slate-950">Builder settings</h2>
         <div className="mt-5 grid gap-5">
           <fieldset>
-            <legend className="text-sm font-bold uppercase tracking-wide text-slate-600">
+            <legend id="wordle-word-source" className="text-sm font-bold uppercase tracking-wide text-slate-600">
               Word source
             </legend>
             <select
+              aria-labelledby="wordle-word-source"
               value={selectedListId}
               onChange={(event) => chooseWordList(event.target.value)}
               className="mt-3 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"

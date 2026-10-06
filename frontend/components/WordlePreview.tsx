@@ -152,7 +152,7 @@ export function WordlePreview({
 
       <div className="mt-5">
         <p className="text-sm font-semibold text-slate-700">Target pattern</p>
-        <div className="mt-2 flex flex-wrap gap-3" aria-label="Target phoneme hints">
+        <div className="mt-2 flex flex-wrap gap-3" role="group" aria-label="Target phoneme hints">
           {target.phonemes.map((symbol) => {
             const phoneme = findPhoneme(symbol);
             return phoneme ? (
@@ -164,7 +164,7 @@ export function WordlePreview({
         </div>
       </div>
 
-      <div className="mt-6 grid gap-2" aria-label="Submitted phoneme guesses">
+      <div className="mt-6 grid gap-2" role="group" aria-label="Submitted phoneme guesses">
         {Array.from({ length: maxGuesses }).map((_, rowIndex) => {
           const row = submitted[rowIndex];
           const active = rowIndex === submitted.length && !isSolved;
