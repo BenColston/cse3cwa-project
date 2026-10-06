@@ -92,3 +92,9 @@ Screen-reader announcements, phoneme pronunciation, colour-independent guess
 feedback, all dark-theme states, zoom/reflow, and larger-grid layouts still
 need focused manual review. These initial-page audits also do not establish
 accessibility of every saved dataset, validation state, or dashboard alert.
+
+## Subsequent Refinement
+
+The pointer-only Word Search selection gap was subsequently addressed in the
+[keyboard refinement stage](word-search-keyboard.md). The baseline and after
+reports above are retained unchanged; that stage has separate reports and tests.

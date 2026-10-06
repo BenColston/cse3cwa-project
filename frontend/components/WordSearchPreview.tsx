@@ -1,6 +1,6 @@
 "use client";
 
-import { PointerEvent, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, useMemo, useRef, useState } from "react";
 import { wordSearchWords, type CorpusWord } from "@/lib/activityData";
 import { createWordSearchPuzzle } from "@/lib/wordSearch";
 
@@ -69,6 +69,9 @@ export function WordSearchPreview({
   const [message, setMessage] = useState("Drag across the grid to find a phoneme sequence.");
   const selectionStartRef = useRef<Coord | null>(null);
   const selectedPathRef = useRef<Coord[]>([]);
+  const selectionMode = useRef<"pointer" | "keyboard" | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [focusedCell, setFocusedCell] = useState<Coord>({ row: 0, col: 0 });
 
   const puzzle = useMemo(
     () => createWordSearchPuzzle(activeWords, rows, cols, version),
@@ -91,27 +94,34 @@ export function WordSearchPreview({
   function updateRows(value: string) {
     onRowsChange(Math.max(6, Math.min(12, Number(value) || 8)));
     setFoundSelections([]);
-    setSelectedPath([]);
-    selectedPathRef.current = [];
+    clearSelection();
   }
 
   function updateCols(value: string) {
     onColsChange(Math.max(6, Math.min(12, Number(value) || 8)));
     setFoundSelections([]);
-    setSelectedPath([]);
-    selectedPathRef.current = [];
+    clearSelection();
   }
 
   function regeneratePuzzle() {
     setVersion((value) => value + 1);
     setShowAnswers(false);
     setFoundSelections([]);
-    setSelectedPath([]);
-    selectedPathRef.current = [];
+    clearSelection();
+    setFocusedCell({ row: 0, col: 0 });
     setMessage("New puzzle generated. Drag across the grid to find a word.");
   }
 
-  function startSelection(coord: Coord) {
+  function clearSelection() {
+    selectionMode.current = null;
+    selectionStartRef.current = null;
+    selectedPathRef.current = [];
+    setSelectionStart(null);
+    setSelectedPath([]);
+  }
+
+  function startSelection(coord: Coord, mode: "pointer" | "keyboard") {
+    selectionMode.current = mode;
     selectionStartRef.current = coord;
     selectedPathRef.current = [coord];
     setSelectionStart(coord);
@@ -125,30 +135,23 @@ export function WordSearchPreview({
     }
 
     const path = getPath(start, coord);
-    if (path.length > 0) {
+    if (path.length > 0 || selectionMode.current === "keyboard") {
       selectedPathRef.current = path;
       setSelectedPath(path);
     }
   }
 
-  function finishSelection(event?: PointerEvent<HTMLDivElement>) {
-    const targetCell = event?.target instanceof HTMLElement
-      ? event.target.closest("[data-row][data-col]")
-      : null;
+  function finishSelection(end?: Coord) {
+    if (!selectionMode.current) return;
     const start = selectionStartRef.current ?? selectionStart;
     const finalPath =
-      start && targetCell instanceof HTMLElement
-        ? getPath(start, {
-            row: Number(targetCell.dataset.row),
-            col: Number(targetCell.dataset.col),
-          })
+      start && end
+        ? getPath(start, end)
         : selectedPathRef.current;
 
     if (finalPath.length === 0) {
-      selectionStartRef.current = null;
-      selectedPathRef.current = [];
-      setSelectionStart(null);
-      setSelectedPath([]);
+      clearSelection();
+      setMessage("Choose a straight horizontal, vertical, or diagonal path.");
       return;
     }
 
@@ -173,14 +176,45 @@ export function WordSearchPreview({
       setMessage("No match yet. Try a straight horizontal, vertical, or diagonal path.");
     }
 
-    selectionStartRef.current = null;
-    selectedPathRef.current = [];
-    setSelectionStart(null);
-    setSelectedPath([]);
+    clearSelection();
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, coord: Coord) {
+    const steps: Record<string, Coord> = {
+      ArrowUp: { row: -1, col: 0 },
+      ArrowDown: { row: 1, col: 0 },
+      ArrowLeft: { row: 0, col: -1 },
+      ArrowRight: { row: 0, col: 1 },
+    };
+    const step = steps[event.key];
+    if (step) {
+      event.preventDefault();
+      const next = {
+        row: Math.max(0, Math.min(rows - 1, coord.row + step.row)),
+        col: Math.max(0, Math.min(cols - 1, coord.col + step.col)),
+      };
+      if (selectionMode.current === "keyboard") extendSelection(next);
+      gridRef.current
+        ?.querySelector<HTMLButtonElement>(`[data-row="${next.row}"][data-col="${next.col}"]`)
+        ?.focus();
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (event.repeat) return;
+      if (selectionMode.current === "keyboard") {
+        finishSelection(coord);
+      } else {
+        startSelection(coord, "keyboard");
+        setMessage(`Selection started at row ${coord.row + 1}, column ${coord.col + 1}.`);
+      }
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      clearSelection();
+      setMessage("Selection cancelled.");
+    }
   }
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <section className="min-w-0 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-teal-700">
@@ -196,7 +230,7 @@ export function WordSearchPreview({
       </div>
 
       <div className="mt-5 grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 sm:grid-cols-[1fr_1fr_auto_auto]">
-        <label className="grid gap-1 text-sm font-semibold text-slate-700">
+        <label className="grid min-w-0 gap-1 text-sm font-semibold text-slate-700">
           Rows
           <input
             type="number"
@@ -204,10 +238,10 @@ export function WordSearchPreview({
             max={12}
             value={rows}
             onChange={(event) => updateRows(event.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+            className="min-w-0 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
           />
         </label>
-        <label className="grid gap-1 text-sm font-semibold text-slate-700">
+        <label className="grid min-w-0 gap-1 text-sm font-semibold text-slate-700">
           Columns
           <input
             type="number"
@@ -215,7 +249,7 @@ export function WordSearchPreview({
             max={12}
             value={cols}
             onChange={(event) => updateCols(event.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+            className="min-w-0 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
           />
         </label>
         <button
@@ -236,39 +270,54 @@ export function WordSearchPreview({
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(280px,480px)_1fr]">
         <div
+          ref={gridRef}
+          role="grid"
+          aria-describedby="preview-grid-instructions"
           className="grid touch-none gap-1"
           style={{ gridTemplateColumns: `repeat(${cols}, minmax(34px, 1fr))` }}
           aria-label="Generated phoneme word search grid"
-          onPointerLeave={() => {
-            selectionStartRef.current = null;
-            selectedPathRef.current = [];
-            setSelectionStart(null);
-            setSelectedPath([]);
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) clearSelection();
           }}
-          onPointerUp={finishSelection}
+          onPointerLeave={() => {
+            if (selectionMode.current === "pointer") clearSelection();
+          }}
+          onPointerUp={(event) => {
+            if (selectionMode.current !== "pointer") return;
+            const cell = event.target instanceof HTMLElement
+              ? event.target.closest<HTMLElement>("[data-row][data-col]")
+              : null;
+            finishSelection(cell ? { row: Number(cell.dataset.row), col: Number(cell.dataset.col) } : undefined);
+          }}
           onPointerCancel={() => {
-            selectionStartRef.current = null;
-            selectedPathRef.current = [];
-            setSelectionStart(null);
-            setSelectedPath([]);
+            if (selectionMode.current === "pointer") clearSelection();
           }}
         >
-          {puzzle.grid.map((row, rowIndex) =>
-            row.map((phoneme, colIndex) => {
+          {puzzle.grid.map((row, rowIndex) => (
+            <div key={rowIndex} role="row" className="contents">
+              {row.map((phoneme, colIndex) => {
               const key = coordKey(rowIndex, colIndex);
               const isAnswer = showAnswers && answerCells.has(key);
               const isSelected = selectedCells.has(key);
               const isFound = foundCells.has(key);
               return (
+                <div key={`${rowIndex}-${colIndex}`} role="gridcell" aria-selected={isSelected} className="contents">
                 <button
-                  key={`${rowIndex}-${colIndex}`}
                   type="button"
                   data-row={rowIndex}
                   data-col={colIndex}
-                  onPointerDown={() => startSelection({ row: rowIndex, col: colIndex })}
-                  onPointerEnter={() => extendSelection({ row: rowIndex, col: colIndex })}
-                  onFocus={() => setMessage("Use pointer drag to select phoneme words in the grid.")}
-                  className={`grid aspect-square place-items-center rounded border text-xs font-extrabold sm:text-sm ${
+                  tabIndex={
+                    rowIndex === Math.min(focusedCell.row, rows - 1) &&
+                    colIndex === Math.min(focusedCell.col, cols - 1) ? 0 : -1
+                  }
+                  aria-label={`Row ${rowIndex + 1}, column ${colIndex + 1}: /${phoneme}/${isFound ? ", found" : ""}`}
+                  onKeyDown={(event) => handleKeyDown(event, { row: rowIndex, col: colIndex })}
+                  onPointerDown={() => startSelection({ row: rowIndex, col: colIndex }, "pointer")}
+                  onPointerEnter={() => {
+                    if (selectionMode.current === "pointer") extendSelection({ row: rowIndex, col: colIndex });
+                  }}
+                  onFocus={() => setFocusedCell({ row: rowIndex, col: colIndex })}
+                  className={`grid aspect-square place-items-center rounded border text-xs font-extrabold focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-600 sm:text-sm ${
                     isFound
                       ? "border-emerald-500 bg-emerald-100 text-emerald-950"
                       : isSelected
@@ -280,11 +329,18 @@ export function WordSearchPreview({
                 >
                   {phoneme}
                 </button>
+                </div>
               );
-            }),
-          )}
+              })}
+            </div>
+          ))}
         </div>
         <div>
+          <p id="preview-grid-instructions" className="sr-only">
+            Use arrow keys to move between tiles. Enter or Space starts a selection;
+            move to the last tile and press Enter or Space again to check it.
+            Escape cancels. Tab leaves the grid. Pointer dragging is also available.
+          </p>
           <p
             role="status"
             className="rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700"

@@ -194,7 +194,7 @@ export function WordSearchBuilder() {
   }
 
   return (
-    <section className="mx-auto grid max-w-6xl gap-5 px-4 py-8 sm:px-6 lg:grid-cols-[1.2fr_0.8fr]">
+    <section className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-5 px-4 py-8 sm:px-6 lg:grid-cols-[1.2fr_0.8fr]">
       <WordSearchPreview
         key={selectedListId}
         words={activeWords}
@@ -204,7 +204,7 @@ export function WordSearchBuilder() {
         onRowsChange={updateRows}
         onColsChange={updateCols}
       />
-      <aside className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <aside className="min-w-0 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-2xl font-bold text-slate-950">Output settings</h2>
         <div className="mt-4 grid gap-5 text-sm text-slate-700">
           <label className="grid gap-2 text-sm font-bold uppercase tracking-wide text-slate-600">
@@ -212,7 +212,7 @@ export function WordSearchBuilder() {
             <select
               value={selectedListId}
               onChange={(event) => chooseWordList(event.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+              className="min-w-0 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
             >
               <option value="local">Local HCE corpus</option>
               {savedLists.map((list) => (
@@ -253,7 +253,7 @@ export function WordSearchBuilder() {
               <select
                 defaultValue=""
                 onChange={(event) => loadConfiguration(event.target.value)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+                className="min-w-0 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
               >
                 <option value="" disabled>
                   Choose a Word Search configuration
@@ -270,7 +270,7 @@ export function WordSearchBuilder() {
               <input
                 value={configName}
                 onChange={(event) => setConfigName(event.target.value)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
+                className="min-w-0 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-semibold normal-case tracking-normal text-slate-950 focus:outline-none focus:ring-4 focus:ring-amber-300"
               />
             </label>
             <button
