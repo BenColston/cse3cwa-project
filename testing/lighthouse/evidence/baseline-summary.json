@@ -1,0 +1,239 @@
+{
+  "label": "baseline",
+  "startedAt": "2026-10-06T19:24:39.168Z",
+  "baseUrl": "http://localhost:3000",
+  "apiUrl": "http://localhost:4080",
+  "results": [
+    {
+      "page": "home",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:24:46.083Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "home-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "about",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:24:52.580Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "about-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "wordle",
+      "formFactor": "desktop",
+      "score": 90,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:24:58.985Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "wordle-desktop.html",
+      "failedAudits": [
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "items": [
+            {
+              "selector": "main.flex-1 > section.mx-auto > section.rounded-lg > div.mt-6",
+              "snippet": "<div class=\"mt-6 grid gap-2\" aria-label=\"Submitted phoneme guesses\">",
+              "explanation": "Fix all of the following:\n  aria-label attribute cannot be used on \"div\" elements with no valid role attribute."
+            }
+          ]
+        },
+        {
+          "id": "select-name",
+          "title": "Select elements do not have associated label elements.",
+          "items": [
+            {
+              "selector": "aside.rounded-lg > div.mt-5 > fieldset > select.mt-3",
+              "snippet": "<select class=\"mt-3 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-bas…\">",
+              "explanation": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "word-search",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:05.349Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "word-search-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "saved-data",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:11.797Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "saved-data-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "settings",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:18.168Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "settings-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-wordle",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:24.413Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-wordle-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-word-search",
+      "formFactor": "desktop",
+      "score": 93,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:30.673Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-word-search-desktop.html",
+      "failedAudits": [
+        {
+          "id": "label",
+          "title": "Form elements do not have associated labels",
+          "items": [
+            {
+              "selector": "section.panel > div.layout > div > textarea#wordInput",
+              "snippet": "<textarea id=\"wordInput\">",
+              "explanation": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "home",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:36.981Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "home-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "about",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:43.274Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "about-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "wordle",
+      "formFactor": "mobile",
+      "score": 90,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:49.650Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "wordle-mobile.html",
+      "failedAudits": [
+        {
+          "id": "aria-prohibited-attr",
+          "title": "Elements use prohibited ARIA attributes",
+          "items": [
+            {
+              "selector": "main.flex-1 > section.mx-auto > section.rounded-lg > div.mt-6",
+              "snippet": "<div class=\"mt-6 grid gap-2\" aria-label=\"Submitted phoneme guesses\">",
+              "explanation": "Fix all of the following:\n  aria-label attribute cannot be used on \"div\" elements with no valid role attribute."
+            }
+          ]
+        },
+        {
+          "id": "select-name",
+          "title": "Select elements do not have associated label elements.",
+          "items": [
+            {
+              "selector": "aside.rounded-lg > div.mt-5 > fieldset > select.mt-3",
+              "snippet": "<select class=\"mt-3 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-bas…\">",
+              "explanation": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "word-search",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:25:56.094Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "word-search-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "saved-data",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:26:02.493Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "saved-data-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "settings",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:26:08.794Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "settings-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-wordle",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:26:14.936Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-wordle-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-word-search",
+      "formFactor": "mobile",
+      "score": 93,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-06T19:26:21.074Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-word-search-mobile.html",
+      "failedAudits": [
+        {
+          "id": "label",
+          "title": "Form elements do not have associated labels",
+          "items": [
+            {
+              "selector": "section.panel > div.layout > div > textarea#wordInput",
+              "snippet": "<textarea id=\"wordInput\">",
+              "explanation": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "finishedAt": "2026-10-06T19:26:25.450Z"
+}

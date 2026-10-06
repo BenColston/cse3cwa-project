@@ -17,6 +17,7 @@ node_modules/
 /testing/jmeter/.tools/
 /testing/jmeter/fixtures/
 /testing/jmeter/results/
+/testing/lighthouse/results/
 
 # next.js
 .next/
