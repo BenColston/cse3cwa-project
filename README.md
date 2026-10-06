@@ -4,9 +4,14 @@ Benjamin Colston - 22557298
 
 ## Overview
 
-This project is the Assessment 2 version of the phoneme activity builder. It
-extends the Assignment 1 frontend with a backend API, Postgres database, Prisma
-schema, validation, Docker support, and stored activity workflows.
+This project is the phoneme activity builder developed across Assessments 1,
+2, and 3. It includes a frontend, backend API, Postgres database, Prisma schema,
+validation, Docker support, stored activity workflows, and usage instrumentation.
+Assessment 3 is still in progress: the metrics API and testing evidence exist,
+but the dashboard interface, labelled simulated records, and operational
+reporting views remain to be completed.
+
+Repository: https://github.com/BenColston/CSE3CWA-Project
 
 Teachers can save phoneme word lists, create Wordle or Word Search activity
 configurations from stored data, generate downloadable HTML activities, and
@@ -18,6 +23,8 @@ store generated HTML outputs against saved activity configurations.
 cse3cwa-project/
   frontend/   Next.js frontend for the activity builder
   api/        Next.js API service with Prisma and Postgres integration
+  testing/    JMeter and Lighthouse tooling and retained evidence
+  docs/       Submission review and reference draft
 ```
 
 ## Main Features
@@ -88,6 +95,7 @@ The Prisma schema includes:
 - `WordEntry` for words and their phoneme arrays.
 - `ActivityConfig` for Wordle and Word Search settings.
 - `GeneratedOutput` for stored downloadable HTML output.
+- `UsageEvent` for persisted page-duration, activity-use, and generation events.
 
 The schema is in:
 
@@ -140,6 +148,10 @@ Page durations are limited to one day per event. Activity type is required for
 activity-use and generation events. Successful and failed generation attempts
 are counted from their respective events; stored downloadable HTML files are
 reported separately.
+
+Activity creation totals represent currently saved configurations, not lifetime
+creation counts. `/health` is an API liveness check; it does not establish
+database readiness. A dashboard consuming these endpoints is not yet implemented.
 
 ## Demonstration Workflow
 
@@ -195,6 +207,10 @@ with `npm run test:e2e:report` from `frontend`.
 
 ## Submission Notes
 
+The requirement-by-requirement status and remaining work are documented in
+[docs/assignment-3-review.md](docs/assignment-3-review.md). The industry-source
+reference draft is in [docs/references.md](docs/references.md).
+
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
 
@@ -204,5 +220,11 @@ smoke test before increasing the traffic level.
 
 - Do not include `node_modules` in the submitted zip.
 - Include the GitHub repository link.
-- The video demonstration should show the student ID, Docker run, health check,
-  backend CRUD workflow, configuration save/load, and stored generated HTML.
+- The Assignment 3 video must be 3 to 8 minutes and include your face, voice,
+  student ID, working application, dashboard, data-driven features, alerts,
+  reporting views, observability metrics, Playwright tests, JMeter results,
+  Lighthouse results, and the GitHub homepage and commits.
+- Complete the remaining dashboard and reporting requirements before recording
+  the final walkthrough. Previously recorded test footage may still be useful.
+- Submit the required AI acknowledgement using the LMS template and review the
+  reference draft against the work actually used.
