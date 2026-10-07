@@ -1,0 +1,189 @@
+{
+  "label": "polish",
+  "startedAt": "2026-10-07T02:42:34.387Z",
+  "baseUrl": "http://localhost:3000",
+  "apiUrl": "http://localhost:4080",
+  "results": [
+    {
+      "page": "home",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:42:36.822Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "home-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "about",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:42:43.263Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "about-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "dashboard",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:42:49.680Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "dashboard-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "wordle",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:42:56.071Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "wordle-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "word-search",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:02.641Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "word-search-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "saved-data",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:09.243Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "saved-data-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "settings",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:15.727Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "settings-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-wordle",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:21.929Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-wordle-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-word-search",
+      "formFactor": "desktop",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:28.149Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-word-search-desktop.html",
+      "failedAudits": []
+    },
+    {
+      "page": "home",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:34.338Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "home-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "about",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:40.688Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "about-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "dashboard",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:47.145Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "dashboard-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "wordle",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:43:53.625Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "wordle-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "word-search",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:44:00.120Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "word-search-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "saved-data",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:44:06.691Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "saved-data-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "settings",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:44:13.159Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "settings-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-wordle",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:44:19.458Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-wordle-mobile.html",
+      "failedAudits": []
+    },
+    {
+      "page": "generated-word-search",
+      "formFactor": "mobile",
+      "score": 100,
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T02:44:25.576Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "report": "generated-word-search-mobile.html",
+      "failedAudits": []
+    }
+  ],
+  "finishedAt": "2026-10-07T02:44:30.024Z"
+}

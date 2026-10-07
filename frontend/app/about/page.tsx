@@ -3,12 +3,12 @@ import { PageIntro } from "@/components/PageIntro";
 export default function AboutPage() {
   return (
     <>
-      <PageIntro eyebrow="About" title="A data-driven builder for Assessment 2.">
+      <PageIntro eyebrow="About" title="A data-driven builder for Assessment 3.">
         <p>
           This project is a Wordle-style web application builder for Speech
-          Pathology students and teachers. Assessment 2 extends the responsive
-          frontend from Assessment 1 with backend APIs, database storage, and
-          Docker support.
+          Pathology students and teachers. Assessment 3 builds on the frontend,
+          backend APIs, database storage, and Docker support with activity
+          reporting, usage statistics, and labelled demonstration records.
         </p>
       </PageIntro>
 
@@ -44,8 +44,9 @@ export default function AboutPage() {
             </p>
             <p>
               The Word Search tool still produces standalone HTML activities,
-              while the Assignment 2 backend adds stored word lists and saved
-              activity settings that can drive later generation workflows.
+              driven by stored word lists and saved activity settings. The
+              Assessment 3 dashboard reports activity usage and generation
+              outcomes, with simulated records kept separate from recorded data.
             </p>
           </div>
         </div>

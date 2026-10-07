@@ -3,7 +3,7 @@
 Benjamin Colston, student 22557298. Aim for approximately 7 minutes 30 seconds;
 the brief allows 3-8 minutes. Keep face visible and provide narration throughout.
 This script describes implemented behaviour, not guaranteed marks. Complete the
-presentation polish listed in `final-review.md` before the final recording.
+approval and merge of the `Polish` stage before the final recording.
 
 ## Preparation
 
@@ -71,8 +71,8 @@ from the recorded report."
 **Do:** In Wordle, load **[Simulated] Wordle classroom activity**. Show the saved
 source, select **Generate HTML**, then **Store generated HTML**. In Saved Data,
 download the stored Wordle output and open it. Enter `θ`, `ɪ`, `n` and check the
-phonemes. If needed, scroll to the keyboard; do not claim the layout is compact
-until the presentation-polish fix is actually implemented.
+phonemes. Generate and store a fresh file so it includes the compact board and
+side-by-side desktop keyboard; older stored downloads retain their original HTML.
 
 Then load **[Simulated] Word Search classroom activity** in Word Search, store
 its generated HTML, and download it from Saved Data. Open it and demonstrate
@@ -100,10 +100,11 @@ refuses removal when a teacher configuration depends on the sample list."
 If running a later version, state its actual count and outcome rather than
 reading an outdated number from this script.
 
-**Say:** "The current review passed 20 end-to-end tests. They cover CRUD,
+**Say:** "The current review passed 22 end-to-end tests. They cover CRUD,
 dashboard states, source isolation, concurrent sample creation, protected
 cleanup, and both persisted playable downloads. They also check keyboard
-navigation and that drag selection marks the exact word instance selected."
+navigation, compact Wordle layouts across different screen sizes, and that drag
+selection marks the exact word instance selected."
 
 ## 4:55-5:45 JMeter
 
@@ -112,7 +113,7 @@ saved JMeter HTML dashboard. Show the final smoke summary if useful. Do not run
 the long high-load stages during the recording.
 
 **Say:** "JMeter tests the HTTP and database workflow for both activity types.
-The current one-user smoke check passed all 22 requests. Earlier staged tests
+The pre-polish one-user smoke check passed all 22 requests. Earlier staged tests
 used 10, 100, 1,000, and 10,000 configured users. The first three passed; the
 largest stage had a 1.88 percent timeout rate and peak active threads of 389.
 That is not evidence of 10,000 simultaneous users or proven production capacity.

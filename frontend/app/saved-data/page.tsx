@@ -9,9 +9,9 @@ export default function SavedDataPage() {
         title="Review word lists and activity settings from the backend."
       >
         <p>
-          This page connects the frontend to the Assignment 2 API so stored
-          phoneme word lists and saved activity configurations can be reviewed
-          from the user interface.
+          Review stored phoneme word lists, saved activity configurations, and
+          generated HTML outputs. Demonstration records are labelled separately
+          from teacher-created content.
         </p>
       </PageIntro>
 
