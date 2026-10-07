@@ -26,7 +26,8 @@ must be regenerated to receive the new layout.
    previously retained video placeholder.
 3. **Submission tasks are not complete:** verify the final video covers the new
    dashboard and simulations; complete the official AI acknowledgement; review
-   references; prepare and independently check the ZIP. No final upload or
+   references; approve and independently run the final ZIP. Packaging tooling
+   is now provided in `submission-checklist.md`. No final upload or
    existing personal recording was inspected in this review.
 
 No functional regression was found in the exercised stored-data and generated

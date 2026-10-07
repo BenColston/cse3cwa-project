@@ -254,6 +254,11 @@ reference draft is in [docs/references.md](docs/references.md).
 The integrated review and resolved presentation findings are in
 [docs/final-review.md](docs/final-review.md); a timed video script is in
 [docs/video-walkthrough.md](docs/video-walkthrough.md).
+Final packaging and upload checks are in
+[docs/submission-checklist.md](docs/submission-checklist.md). On an approved
+feature branch, run `./scripts/prepare-submission.ps1` in PowerShell to create
+a verified ZIP and hash manifest under `submissions/`. It includes current
+uncommitted files; regenerate after approval/commit and any further edits.
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
