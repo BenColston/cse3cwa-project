@@ -49,6 +49,10 @@ alone do not establish database readiness or full requirement compliance.
    per-file/archive hashes, and final upload/extracted-copy checks are provided.
    See `submission-checklist.md`. Personal video, official acknowledgement,
    applicable deadline, portal format, and final upload remain unverified.
+7. Packaged runtime verification on `Runtime-Check`: isolated fresh database,
+   22 passing browser tests, restart persistence, and original stack restoration
+   are documented in `runtime-check.md`. Dependency audit findings need a separate
+   security follow-up before declaring the package security-ready.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.

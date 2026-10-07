@@ -29,6 +29,8 @@ Fresh databases can use Dashboard's labelled sample-record controls.
 ## Check the Packaged Copy
 
 Current preparation results and limitations are in `packaging-verification.md`.
+The subsequent isolated runtime check passed; see `runtime-check.md` for the
+tested archive, restored original stack, and newly discovered dependency risks.
 
 1. Extract the final ZIP to a new folder, not over the current repository.
 2. Open PowerShell in its `cse3cwa-project` folder. Run `docker compose config -q`.
@@ -52,6 +54,8 @@ do not treat earlier tests on the working repository as that check.
 ## Final Upload Items
 
 - Approved code ZIP and repository link (also present in README).
+- Review the dependency audit findings in `runtime-check.md` on a separate
+  security branch; rebuild/retest and regenerate the package after any fixes.
 - Final video, 3-8 minutes, with readable app/testing evidence, face, voice,
   and student ID. Follow `video-walkthrough.md`; inspect the finished recording.
 - Official LMS AI acknowledgement, completed with your actual AI use and review.
