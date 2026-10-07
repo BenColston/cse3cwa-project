@@ -21,8 +21,9 @@ tool/raw-result paths. Example environments, Dockerfiles, schema, lockfiles,
 tests, and retained evidence remain included. This is not an exhaustive
 credential or privacy audit.
 
-No second stack was started, so an independently running extracted-copy check
-remains pending in `submission-checklist.md`. Previous 22-test browser results
+No second stack was started during this packaging stage. The subsequent
+`Runtime-Check` stage completed that check; see `runtime-check.md`, including
+its dependency security findings. Previous 22-test browser results
 and 18 Lighthouse audits apply to the application source, not a new browser run
 from this package. No live database, personal final video, or completed official
 AI acknowledgement is included or verified. Nothing has been uploaded.

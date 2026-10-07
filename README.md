@@ -259,6 +259,9 @@ Final packaging and upload checks are in
 feature branch, run `./scripts/prepare-submission.ps1` in PowerShell to create
 a verified ZIP and hash manifest under `submissions/`. It includes current
 uncommitted files; regenerate after approval/commit and any further edits.
+The extracted-copy runtime results and dependency security follow-up are in
+[docs/runtime-check.md](docs/runtime-check.md). Successful functional checks do
+not clear the reported npm audit findings or make this local API public-ready.
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
