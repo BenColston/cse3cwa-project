@@ -3,6 +3,9 @@
 7 October 2026, branch `Security-Fixes`. This is a scoped dependency update,
 not a claim that the application is secure or ready for public hosting.
 
+The subsequent scoped Prisma override and latest remaining-risk decision are
+documented in `security-review.md`. Audit counts below belong to this earlier stage.
+
 ## Changes
 
 - Both services: Next.js and matching `eslint-config-next` 16.3.0 -> 16.3.6.

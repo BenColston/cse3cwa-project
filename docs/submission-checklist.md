@@ -58,6 +58,8 @@ do not treat earlier tests on the working repository as that check.
   security branch; rebuild/retest and regenerate the package after any fixes.
   `security-fixes.md` records the applied patches and unresolved high warnings;
   do not describe the current full dependency audit as clean.
+  The subsequent `security-review.md` removes the Prisma production findings
+  with a tested scoped override. Unpatched braces/tooling warnings still remain.
 - Final video, 3-8 minutes, with readable app/testing evidence, face, voice,
   and student ID. Follow `video-walkthrough.md`; inspect the finished recording.
 - Official LMS AI acknowledgement, completed with your actual AI use and review.

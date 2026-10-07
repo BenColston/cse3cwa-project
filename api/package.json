@@ -9,6 +9,7 @@
     "lint": "eslint",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
+    "test:security": "node --test tests/dependency-security.test.mjs",
     "db:push": "prisma db push"
   },
   "dependencies": {
@@ -16,6 +17,11 @@
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"
+  },
+  "overrides": {
+    "@prisma/config@6.19.3": {
+      "deepmerge-ts": "8.0.2"
+    }
   },
   "devDependencies": {
     "@types/node": "^20",
