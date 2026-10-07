@@ -262,6 +262,9 @@ uncommitted files; regenerate after approval/commit and any further edits.
 The extracted-copy runtime results and dependency security follow-up are in
 [docs/runtime-check.md](docs/runtime-check.md). Successful functional checks do
 not clear the reported npm audit findings or make this local API public-ready.
+Patched versions and remaining dependency warnings are documented in
+[docs/security-fixes.md](docs/security-fixes.md). Regenerate older ZIPs after
+approval; they do not receive dependency updates automatically.
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).

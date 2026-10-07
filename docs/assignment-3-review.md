@@ -53,6 +53,9 @@ alone do not establish database readiness or full requirement compliance.
    22 passing browser tests, restart persistence, and original stack restoration
    are documented in `runtime-check.md`. Dependency audit findings need a separate
    security follow-up before declaring the package security-ready.
+8. `Security-Fixes` applies Next.js/Prisma patches and compatible transitive
+   updates. Critical findings are removed; remaining high dependency warnings
+   are documented in `security-fixes.md`. Regenerate earlier archives after approval.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.

@@ -56,6 +56,8 @@ do not treat earlier tests on the working repository as that check.
 - Approved code ZIP and repository link (also present in README).
 - Review the dependency audit findings in `runtime-check.md` on a separate
   security branch; rebuild/retest and regenerate the package after any fixes.
+  `security-fixes.md` records the applied patches and unresolved high warnings;
+  do not describe the current full dependency audit as clean.
 - Final video, 3-8 minutes, with readable app/testing evidence, face, voice,
   and student ID. Follow `video-walkthrough.md`; inspect the finished recording.
 - Official LMS AI acknowledgement, completed with your actual AI use and review.
