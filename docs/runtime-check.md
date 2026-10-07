@@ -3,6 +3,9 @@
 Verified 7 October 2026 on `Runtime-Check`. This stage changes documentation and
 retains evidence only; application source and dependency versions are unchanged.
 
+Subsequent dependency patches and current remaining warnings are documented in
+`security-fixes.md`. The versions/audits below describe this historical test.
+
 ## Package and Isolation
 
 - Tested archive: `Benjamin-Colston-22557298-A3-20261007-025957-412.zip`.
