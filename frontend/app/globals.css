@@ -61,3 +61,8 @@ html[data-theme="dark"] .border-slate-200,
 html[data-theme="dark"] .border-slate-300 {
   border-color: #475569;
 }
+
+html[data-theme="dark"] .dashboard .text-teal-700,
+html[data-theme="dark"] header .text-teal-700 {
+  color: #5eead4;
+}

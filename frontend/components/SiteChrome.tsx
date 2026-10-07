@@ -7,6 +7,7 @@ import { PageUsageTracker } from "@/components/PageUsageTracker";
 
 const navItems = [
   { href: "/", label: "Home" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/about", label: "About" },
   { href: "/wordle", label: "Wordle" },
   { href: "/word-search", label: "Word Search" },
@@ -25,17 +26,18 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <Link href="/" className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">
-              Assessment 2
+              Assessment 3
             </p>
             <p className="truncate text-lg font-bold text-slate-950">
               Phoneme Activity Builder
             </p>
           </Link>
-          <nav className="hidden items-center gap-2 md:flex" aria-label="Main navigation">
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={pathname === item.href ? "page" : undefined}
                 className={`rounded-md px-3 py-2 text-sm font-semibold transition ${
                   pathname === item.href
                     ? "bg-teal-700 text-white"
@@ -48,7 +50,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </nav>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-300 text-xl font-bold text-slate-800 md:hidden"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slate-300 text-xl font-bold text-slate-800 lg:hidden"
             aria-label="Open navigation menu"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
@@ -57,12 +59,13 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </button>
         </div>
         {open ? (
-          <nav className="border-t border-slate-200 bg-white px-4 py-3 md:hidden" aria-label="Compact navigation">
+          <nav className="border-t border-slate-200 bg-white px-4 py-3 lg:hidden" aria-label="Compact navigation">
             <div className="mx-auto grid max-w-6xl gap-2">
               {navItems.map((item) => (
                 <Link
                 key={item.href}
                 href={item.href}
+                aria-current={pathname === item.href ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={`rounded-md px-3 py-2 text-sm font-semibold ${
                     pathname === item.href

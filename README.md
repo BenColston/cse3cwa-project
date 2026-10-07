@@ -7,9 +7,9 @@ Benjamin Colston - 22557298
 This project is the phoneme activity builder developed across Assessments 1,
 2, and 3. It includes a frontend, backend API, Postgres database, Prisma schema,
 validation, Docker support, stored activity workflows, and usage instrumentation.
-Assessment 3 is still in progress: the metrics API and testing evidence exist,
-but the dashboard interface, labelled simulated records, and operational
-reporting views remain to be completed.
+Assessment 3 is still in progress: the dashboard now presents database-backed
+metrics, an activity report, health indicators, and generation warnings.
+A repeatable, labelled simulated-record workflow remains to be completed.
 
 Repository: https://github.com/BenColston/CSE3CWA-Project
 
@@ -36,6 +36,10 @@ cse3cwa-project/
 - Generated HTML outputs can be stored and downloaded from saved activities.
 - Wordle and Word Search builders can load saved backend word lists.
 - Saved configurations can be reloaded into the builders.
+- `/dashboard` reports saved content, per-type configurations and builder visits,
+  page-time samples, generation outcomes, and stored output totals.
+- Dashboard refresh supports loading, empty-data, failed-request, and recovery
+  states without presenting old metrics as current.
 - `/health` endpoint returns `200 OK` when the API is running.
 - Docker Compose runs the frontend, API, and database together.
 
@@ -151,7 +155,9 @@ reported separately.
 
 Activity creation totals represent currently saved configurations, not lifetime
 creation counts. `/health` is an API liveness check; it does not establish
-database readiness. A dashboard consuming these endpoints is not yet implemented.
+database readiness. The dashboard checks health and metrics independently and
+reports failures separately. Metrics refresh on entry and on explicit refresh;
+there is no automatic polling. Tied activity-use counts are displayed as a tie.
 
 ## Demonstration Workflow
 
@@ -213,6 +219,8 @@ reference draft is in [docs/references.md](docs/references.md).
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
+Dashboard verification is documented in
+[testing/lighthouse/evidence/dashboard-interface.md](testing/lighthouse/evidence/dashboard-interface.md).
 
 JMeter load-test setup, stage commands, and report guidance are in
 [testing/jmeter/README.md](testing/jmeter/README.md). Start with its one-user

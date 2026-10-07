@@ -5,13 +5,12 @@ export default function Home() {
   return (
     <>
       <PageIntro
-        eyebrow="Backend implementation and database integration"
+        eyebrow="Data-driven activity building and reporting"
         title="Build phoneme-based classroom activities from stored data."
       >
         <p>
-          This Assessment 2 version keeps the Speech Pathology activity builder
-          from Assessment 1 and adds backend storage for phoneme word lists and
-          saved activity settings.
+          Create Speech Pathology activities from saved phoneme word lists and
+          monitor activity usage, generation outcomes, and stored configurations.
         </p>
       </PageIntro>
 
@@ -33,9 +32,9 @@ export default function Home() {
             body: "Review word lists and activity configurations loaded from the backend API.",
           },
           {
-            href: "/about",
-            title: "Project Context",
-            body: "Review the project scope, student details, and video explanation space.",
+            href: "/dashboard",
+            title: "Dashboard",
+            body: "Review stored content, activity usage, generation outcomes, and API health.",
           },
         ].map((item) => (
           <Link
