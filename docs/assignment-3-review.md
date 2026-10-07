@@ -23,7 +23,7 @@ implemented interface; this checklist is not a predicted grade.
 | Staged JMeter workflow testing and interpretation | Historical stages plus current smoke | Existing stages are retained; the highest stage had timeouts. Final-review one-user smoke passed 22 requests with zero failures. Higher-load stages were not repeated. |
 | Lighthouse results and resulting design changes | Fresh Polish evidence plus historical reports | All 18 fresh desktop/mobile accessibility audits scored 100, with zero failed audits. Original reports remain retained; manual limitations are documented. |
 | Final 3-8 minute video covering all requested features | User verification needed | Test footage has been recorded; final coverage must include the new dashboard/reporting interface and simulated-data workflow. |
-| Code ZIP and repository link | Pending packaging | Repository link is in the root README. No submission ZIP was produced in this review. |
+| Code ZIP and repository link | Preparation implemented; final approval pending | `scripts/prepare-submission.ps1` creates a filtered ZIP and verifies every archived file hash. Repository link is in README. Regenerate after final approval/commit; see `submission-checklist.md`. |
 | At least five sources in APA 7 style | Draft prepared | See `references.md`; review relevance and include the references in the submission format accepted by the coordinator. |
 | AI acknowledgement | User action | Complete the official LMS form. No completed acknowledgement was verified in the repository. |
 
@@ -45,6 +45,10 @@ alone do not establish database readiness or full requirement compliance.
    `../testing/lighthouse/evidence/presentation-polish.md`.
 5. After approving and merging polish, use `video-walkthrough.md` and prepare
    the references, acknowledgement, and ZIP. Regenerate old HTML for filming.
+6. Submission preparation on `Submission---Prep`: repeatable filtered packaging,
+   per-file/archive hashes, and final upload/extracted-copy checks are provided.
+   See `submission-checklist.md`. Personal video, official acknowledgement,
+   applicable deadline, portal format, and final upload remain unverified.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.
