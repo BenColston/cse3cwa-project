@@ -56,6 +56,10 @@ alone do not establish database readiness or full requirement compliance.
 8. `Security-Fixes` applies Next.js/Prisma patches and compatible transitive
    updates. Critical findings are removed; remaining high dependency warnings
    are documented in `security-fixes.md`. Regenerate earlier archives after approval.
+9. `Security-Review` tests a Prisma-scoped deepmerge override; both production-only
+   dependency audits report zero findings. Full audits retain five high tooling
+   findings per service with no upstream braces patch, documented in
+   `security-review.md`. Do not claim the installed images are vulnerability-free.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.

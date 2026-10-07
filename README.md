@@ -265,6 +265,8 @@ not clear the reported npm audit findings or make this local API public-ready.
 Patched versions and remaining dependency warnings are documented in
 [docs/security-fixes.md](docs/security-fixes.md). Regenerate older ZIPs after
 approval; they do not receive dependency updates automatically.
+The subsequent scoped override, compatibility tests, and unpatched tooling risk
+are documented in [docs/security-review.md](docs/security-review.md).
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
