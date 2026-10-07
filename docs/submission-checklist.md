@@ -3,6 +3,9 @@
 Benjamin Colston, student 22557298.
 Repository: https://github.com/BenColston/CSE3CWA-Project
 
+The final technical handover and unverified personal/portal items are in
+`final-signoff.md`. Regenerate the approved package after committing this stage.
+
 ## Code Package
 
 From PowerShell at the repository root on an approved feature branch:

@@ -60,6 +60,9 @@ alone do not establish database readiness or full requirement compliance.
    dependency audits report zero findings. Full audits retain five high tooling
    findings per service with no upstream braces patch, documented in
    `security-review.md`. Do not claim the installed images are vulnerability-free.
+10. `Final` confirms merged application/dependency changes, reruns focused checks,
+    and regenerates the package. `final-signoff.md` separates technical evidence
+    from personal video, acknowledgement, deadline, and portal verification.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.

@@ -267,6 +267,8 @@ Patched versions and remaining dependency warnings are documented in
 approval; they do not receive dependency updates automatically.
 The subsequent scoped override, compatibility tests, and unpatched tooling risk
 are documented in [docs/security-review.md](docs/security-review.md).
+Final technical handover and remaining user checks are in
+[docs/final-signoff.md](docs/final-signoff.md). This does not confirm an LMS upload.
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
