@@ -251,6 +251,9 @@ with `npm run test:e2e:report` from `frontend`.
 The requirement-by-requirement status and remaining work are documented in
 [docs/assignment-3-review.md](docs/assignment-3-review.md). The industry-source
 reference draft is in [docs/references.md](docs/references.md).
+The integrated review and outstanding presentation findings are in
+[docs/final-review.md](docs/final-review.md); a timed video script is in
+[docs/video-walkthrough.md](docs/video-walkthrough.md).
 
 Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).

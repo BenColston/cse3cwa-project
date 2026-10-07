@@ -19,8 +19,8 @@ implemented interface; this checklist is not a predicted grade.
 | Visible operational indicators and alerts | Implemented | Dashboard shows health/metrics status, warnings, empty-data states, and request errors. The simulated failure is explicitly labelled and excluded from recorded failures. |
 | Reporting views | Implemented | Dashboard activity table compares current configurations and recorded builder visits, reports the most-used type (including ties), and links to saved data/outputs and builders. |
 | `/health` returns 200 | Verified live | Returned 200 with `status: ok`. This checks API liveness, not database readiness. |
-| Playwright builder and generated-output use cases | Verified in simulation stage | Full suite: 18 passed, including builder/player cases, dashboard checks, mutation concurrency, persistence, source isolation, concurrent sample creation, and protected cleanup. |
-| Staged JMeter workflow testing and interpretation | Existing evidence | 1, 10, 100, 1,000, and 10,000 configured-user stages retained under `testing/jmeter/evidence`. The highest stage had timeouts and must not be described as a pass. |
+| Playwright builder and generated-output use cases | Verified in final review | Full suite: 20 passed. Added checks load stored configurations for both games, persist HTML, download it byte-for-byte, and play the stored artifact. |
+| Staged JMeter workflow testing and interpretation | Historical stages plus current smoke | Existing stages are retained; the highest stage had timeouts. Final-review one-user smoke passed 22 requests with zero failures. Higher-load stages were not repeated. |
 | Lighthouse results and resulting design changes | Existing and dashboard-stage evidence | Baseline, improved, keyboard, and dashboard reports retained under `testing/lighthouse/evidence`; dashboard desktop/mobile audits scored 100. Manual limitations remain documented. |
 | Final 3-8 minute video covering all requested features | User verification needed | Test footage has been recorded; final coverage must include the new dashboard/reporting interface and simulated-data workflow. |
 | Code ZIP and repository link | Pending packaging | Repository link is in the root README. No submission ZIP was produced in this review. |
@@ -36,12 +36,13 @@ alone do not establish database readiness or full requirement compliance.
 ## Stage Progress
 
 1. Dashboard interface: implemented and verified, with retained test/audit evidence.
-2. Simulated records: implemented on `Simulated---records`, awaiting user review
-   and approval. Synthetic metrics remain separate from recorded usage.
+2. Simulated records: implemented and merged before this review. Synthetic
+   metrics remain separate from recorded usage.
 3. Dashboard and simulation regression coverage: implemented, including safe
    cleanup. Continue the documented manual accessibility checks.
-4. Next, review the integrated app against the rubric, then prepare the final
-   video, reviewed references, AI acknowledgement, and reproducible submission ZIP.
+4. Integrated review: completed in `final-review.md`, with presentation-polish
+   findings. Address those on a new branch before the final recording, then use
+   `video-walkthrough.md` and prepare the references, acknowledgement, and ZIP.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.
@@ -59,10 +60,11 @@ Do not implement changes on `main`.
 - A Lighthouse accessibility score of 100 is not WCAG certification. Retain
   the documented manual-check limitations and explain the keyboard improvements.
 
-## Provisional Final Video Order
+## Final Video Guide
 
-Use this after the missing features are implemented; do not narrate planned
-features as already working. Keep the total within 3-8 minutes.
+The implemented dashboard and simulation workflow are covered by the timed
+steps and dialogue in `video-walkthrough.md`. Resolve the presentation findings
+in `final-review.md`, then rehearse the guide. Keep the total within 3-8 minutes.
 
 1. Introduce Benjamin Colston, student 22557298, with face, voice, and student ID.
 2. Show the running application and explain frontend -> API -> Postgres data flow.
