@@ -15,11 +15,11 @@ implemented interface; this checklist is not a predicted grade.
 | Store and retrieve phoneme content and activity settings | Implemented | Prisma models, Postgres persistence, CRUD routes, Saved Data, and builder save/load workflows. |
 | Database-backed operational statistics | Implemented | `UsageEvent`, `/metrics/events`, and `/metrics` feed the dashboard's usage, duration, and generation summaries. |
 | Data-driven dashboard interface | Implemented; final demonstration pending | `/dashboard` presents stored totals, per-type saved configurations and builder visits, generation outcomes, page-time samples, and health. |
-| Simulated input records | Partial | Automated tests create temporary records, but there is no repeatable, labelled demonstration-data workflow for dashboard reporting. |
-| Visible operational indicators and alerts | Implemented; demonstration data pending | Dashboard shows separate health/metrics status, failed-generation warnings, empty-data states, and request errors. Simulated records will support a repeatable demonstration. |
+| Simulated input records | Implemented | Dashboard controls create an owned, labelled dataset with phoneme content, both activity types, settings, hints, and persisted sample events. Separate reporting and guarded cleanup are tested. |
+| Visible operational indicators and alerts | Implemented | Dashboard shows health/metrics status, warnings, empty-data states, and request errors. The simulated failure is explicitly labelled and excluded from recorded failures. |
 | Reporting views | Implemented | Dashboard activity table compares current configurations and recorded builder visits, reports the most-used type (including ties), and links to saved data/outputs and builders. |
 | `/health` returns 200 | Verified live | Returned 200 with `status: ok`. This checks API liveness, not database readiness. |
-| Playwright builder and generated-output use cases | Verified in dashboard stage | Full suite: 15 passed, including CRUD, standalone activity, word-search interactions, and five new dashboard tests. |
+| Playwright builder and generated-output use cases | Verified in simulation stage | Full suite: 18 passed, including builder/player cases, dashboard checks, mutation concurrency, persistence, source isolation, concurrent sample creation, and protected cleanup. |
 | Staged JMeter workflow testing and interpretation | Existing evidence | 1, 10, 100, 1,000, and 10,000 configured-user stages retained under `testing/jmeter/evidence`. The highest stage had timeouts and must not be described as a pass. |
 | Lighthouse results and resulting design changes | Existing and dashboard-stage evidence | Baseline, improved, keyboard, and dashboard reports retained under `testing/lighthouse/evidence`; dashboard desktop/mobile audits scored 100. Manual limitations remain documented. |
 | Final 3-8 minute video covering all requested features | User verification needed | Test footage has been recorded; final coverage must include the new dashboard/reporting interface and simulated-data workflow. |
@@ -33,19 +33,15 @@ and includes a live database-backed browser test, in addition to controlled
 responses for failure and empty-data coverage. Successful endpoint responses
 alone do not establish database readiness or full requirement compliance.
 
-## Next Implementation Steps
+## Stage Progress
 
-1. Review and approve the dashboard branch: metrics access, reporting, independent
-   health indicators, per-type counts, usage, durations, output totals, alerts,
-   loading/unavailable/empty states, and responsive light/dark layouts.
-2. On a separate simulation branch, add repeatable, clearly labelled sample
-   records for both activity types, phoneme arrays, settings, hints, and usage
-   events. Keep simulated failures distinguishable from observed failures and
-   provide scoped cleanup without deleting teacher-created records.
-3. Add focused Playwright coverage for dashboard data, alerts, and simulation
-   persistence; audit the new interface with Lighthouse and record results.
-4. Refresh submission documentation and prepare the final video and ZIP after
-   those features are checked and approved.
+1. Dashboard interface: implemented and verified, with retained test/audit evidence.
+2. Simulated records: implemented on `Simulated---records`, awaiting user review
+   and approval. Synthetic metrics remain separate from recorded usage.
+3. Dashboard and simulation regression coverage: implemented, including safe
+   cleanup. Continue the documented manual accessibility checks.
+4. Next, review the integrated app against the rubric, then prepare the final
+   video, reviewed references, AI acknowledgement, and reproducible submission ZIP.
 
 Keep each step on a feature branch, with user-reviewed commits and merges.
 Do not implement changes on `main`.

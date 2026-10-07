@@ -7,6 +7,7 @@ export type ApiWordEntry = {
 };
 
 export type ApiWordList = {
+  simulationBatchId?: string | null;
   id: string;
   name: string;
   description: string | null;
@@ -17,6 +18,7 @@ export type ApiWordList = {
 };
 
 export type ApiActivityConfig = {
+  simulationBatchId?: string | null;
   id: string;
   name: string;
   type: "WORDLE" | "WORD_SEARCH";
@@ -93,6 +95,8 @@ export type UsageEventPayload = {
 };
 
 export type ApiMetrics = {
+  source?: "recorded" | "simulated";
+  simulationAvailable?: boolean;
   wordLists: number;
   activitiesCreated: number;
   activitiesCreatedByType: Record<ApiActivityConfig["type"], number>;
@@ -142,9 +146,11 @@ async function sendJson<T>(
   path: string,
   method: "POST" | "PUT" | "DELETE",
   body?: unknown,
+  signal?: AbortSignal,
 ): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
+    signal,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -167,8 +173,12 @@ export function getApiBaseUrl() {
   return API_BASE_URL;
 }
 
-export function fetchMetrics(signal?: AbortSignal) {
-  return fetchJson<ApiMetrics>("/metrics", signal);
+export function fetchMetrics(signal?: AbortSignal, source: "recorded" | "simulated" = "recorded") {
+  return fetchJson<ApiMetrics>(source === "recorded" ? "/metrics" : "/metrics?source=simulated", signal);
+}
+
+export function manageSimulation(method: "POST" | "DELETE") {
+  return sendJson<{ message: string }>("/simulation", method, undefined, AbortSignal.timeout(10000));
 }
 
 export async function fetchApiHealth(signal?: AbortSignal) {

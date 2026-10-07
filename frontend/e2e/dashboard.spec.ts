@@ -23,6 +23,8 @@ test("dashboard reports API metrics and refreshes without retaining stale totals
   fail = true;
   await page.getByRole("button", { name: "Refresh", exact: true }).click();
   await expect(page.getByRole("main").getByRole("alert")).toContainText("Metrics unavailable");
+  await expect(page.getByText("Dataset status unavailable", { exact: false })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Create sample records", exact: true })).toBeDisabled();
   await expect(page.getByRole("region", { name: "Operational statistics" })).toHaveCount(0);
   fail = false;
   await page.getByRole("button", { name: "Refresh", exact: true }).click();

@@ -9,7 +9,8 @@ This project is the phoneme activity builder developed across Assessments 1,
 validation, Docker support, stored activity workflows, and usage instrumentation.
 Assessment 3 is still in progress: the dashboard now presents database-backed
 metrics, an activity report, health indicators, and generation warnings.
-A repeatable, labelled simulated-record workflow remains to be completed.
+The dashboard can create and remove a labelled simulated dataset and report its
+metrics separately from recorded usage. Final submission preparation remains.
 
 Repository: https://github.com/BenColston/CSE3CWA-Project
 
@@ -40,6 +41,8 @@ cse3cwa-project/
   page-time samples, generation outcomes, and stored output totals.
 - Dashboard refresh supports loading, empty-data, failed-request, and recovery
   states without presenting old metrics as current.
+- Repeatable sample content and events are database-backed and clearly labelled;
+  cleanup protects teacher-created records and dependent configurations.
 - `/health` endpoint returns `200 OK` when the API is running.
 - Docker Compose runs the frontend, API, and database together.
 
@@ -100,6 +103,7 @@ The Prisma schema includes:
 - `ActivityConfig` for Wordle and Word Search settings.
 - `GeneratedOutput` for stored downloadable HTML output.
 - `UsageEvent` for persisted page-duration, activity-use, and generation events.
+- `SimulationBatch` for explicit ownership of demonstration content and events.
 
 The schema is in:
 
@@ -112,7 +116,10 @@ api/prisma/schema.prisma
 ```text
 GET     /health
 GET     /metrics
+GET     /metrics?source=simulated
 POST    /metrics/events
+POST    /simulation
+DELETE  /simulation
 
 GET     /word-lists
 POST    /word-lists
@@ -158,6 +165,34 @@ creation counts. `/health` is an API liveness check; it does not establish
 database readiness. The dashboard checks health and metrics independently and
 reports failures separately. Metrics refresh on entry and on explicit refresh;
 there is no automatic polling. Tied activity-use counts are displayed as a tie.
+
+`/metrics` defaults to recorded data and excludes records owned by a simulation
+batch. `source=simulated` reports only batch-owned records; other source values
+return 400. Ordinary builder visits and downloads remain recorded interactions,
+even when a teacher chooses sample content. They are not synthetic events.
+
+### Simulated demonstration
+
+1. Open `/dashboard` and select **Create sample records** near the bottom.
+2. The view switches to **Simulated demonstration**: one five-word phoneme list,
+   one Wordle configuration, one Word Search configuration, eight sample visits,
+   five sample successes, one sample failure, and three page-time samples with a
+   30-second average. No generated HTML is fabricated.
+3. Reload and select **Simulated demonstration** again to show persistence. In
+   Saved Data, the sample list/configurations carry simulation labels and can be
+   loaded into the builders using the normal saved-data workflow.
+4. Switch to **Recorded usage** to show that synthetic failures and durations
+   do not change the recorded report.
+5. Select **Remove sample records** and confirm. This removes only batch-owned
+   records and associated outputs. Removal is blocked with 409 if a teacher-created
+   configuration depends on the sample list; move or delete that configuration
+   explicitly first. An unrelated teacher list is never selected by its name.
+
+Create is idempotent: an existing batch is not duplicated or overwritten. To
+reset edited or individually deleted sample records, remove the batch and create
+it again. The API uses serializable transactions with bounded conflict retries.
+The existing API is intended for the local classroom demonstration; these
+mutation endpoints do not add authentication for a public deployment.
 
 ## Demonstration Workflow
 
@@ -221,6 +256,8 @@ Lighthouse accessibility audits, before-and-after evidence, and manual-check
 limitations are in [testing/lighthouse/README.md](testing/lighthouse/README.md).
 Dashboard verification is documented in
 [testing/lighthouse/evidence/dashboard-interface.md](testing/lighthouse/evidence/dashboard-interface.md).
+Simulation persistence, isolation, and cleanup evidence is in
+[testing/lighthouse/evidence/simulated-records.md](testing/lighthouse/evidence/simulated-records.md).
 
 JMeter load-test setup, stage commands, and report guidance are in
 [testing/jmeter/README.md](testing/jmeter/README.md). Start with its one-user
