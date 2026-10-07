@@ -3,7 +3,7 @@
 Benjamin Colston, student 22557298. Aim for approximately 7 minutes 30 seconds;
 the brief allows 3-8 minutes. Keep face visible and provide narration throughout.
 This script describes implemented behaviour, not guaranteed marks. Complete the
-approval and merge of the `Polish` stage before the final recording.
+approval and merge of the final reviewed stages before the final recording.
 
 ## Preparation
 
