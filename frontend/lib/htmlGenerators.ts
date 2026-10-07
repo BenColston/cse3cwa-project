@@ -42,6 +42,12 @@ function documentShell(title: string, body: string, script = "") {
     .key { min-width: 44px; background: white; border-color: #cbd5e1; color: #0f172a; }
     .wordle-row { display: grid; gap: 8px; margin-bottom: 8px; }
     .cell { aspect-ratio: 1; min-height: 42px; display: grid; place-items: center; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; border-radius: 4px; font-weight: 800; }
+    .wordle-layout { display: grid; gap: 24px; margin-top: 24px; }
+    .wordle-layout > div { min-width: 0; }
+    .wordle-layout h2 { margin-top: 0; }
+    .wordle-row .cell { aspect-ratio: auto; height: 48px; min-height: 48px; min-width: 0; overflow-wrap: anywhere; }
+    .wordle-layout button { min-height: 44px; }
+    @media (min-width: 760px) { .wordle-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
     .correct { background: #ccfbf1; border-color: #0f766e; color: #134e4a; }
     .present { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
     .absent { background: #e2e8f0; border-color: #94a3b8; color: #334155; }
@@ -83,7 +89,7 @@ export function generateWordleHtml(activity = wordleActivity) {
   const rows = Array.from({ length: activity.maxGuesses })
     .map(
       (_, rowIndex) =>
-        `<div class="wordle-row" data-row="${rowIndex}" style="grid-template-columns: repeat(${target.phonemes.length}, minmax(48px, 1fr));">${Array.from(
+        `<div class="wordle-row" data-row="${rowIndex}" style="width: min(100%, ${target.phonemes.length * 56 + (target.phonemes.length - 1) * 8}px); grid-template-columns: repeat(${target.phonemes.length}, minmax(0, 1fr));">${Array.from(
           { length: target.phonemes.length },
         )
           .map((__, cellIndex) => `<span class="cell" data-cell="${cellIndex}"></span>`)
@@ -98,15 +104,21 @@ export function generateWordleHtml(activity = wordleActivity) {
       <h1>${escapeHtml(activity.title)}</h1>
       <p>Choose phonemes from the keyboard to match the target sequence. Hover over hint chips or keyboard buttons for phoneme-to-English equivalence.</p>
       <div class="row" role="group" aria-label="Target phoneme hints">${targetHints}</div>
-      <h2>Guesses</h2>
-      <div id="board">${rows}</div>
-      <p id="feedback" role="status" class="muted">Choose ${target.phonemes.length} phonemes, then check your answer.</p>
-      <div class="actions">
-        <button type="button" id="checkBtn">Check phonemes</button>
-        <button type="button" class="secondary" id="deleteBtn">Delete</button>
+      <div class="wordle-layout">
+        <div>
+          <h2>Guesses</h2>
+          <div id="board">${rows}</div>
+          <p id="feedback" role="status" class="muted">Choose ${target.phonemes.length} phonemes, then check your answer.</p>
+          <div class="actions">
+            <button type="button" id="checkBtn">Check phonemes</button>
+            <button type="button" class="secondary" id="deleteBtn">Delete</button>
+          </div>
+        </div>
+        <div>
+          <h2>HCE phoneme keyboard</h2>
+          <div class="keyboard">${keyboard}</div>
+        </div>
       </div>
-      <h2>HCE phoneme keyboard</h2>
-      <div class="keyboard">${keyboard}</div>
     </section>`,
     `<script>
       const target = ${JSON.stringify(target)};

@@ -4,15 +4,22 @@ Reviewed on 7 October 2026 on `Final-review`. This stage adds integrated tests
 and submission guidance, not application behaviour changes. It is not a grade
 prediction or confirmation that the final submission has been uploaded.
 
+Presentation follow-up on `Polish`: the two presentation findings below are
+resolved. New generated Wordle files use compact responsive rows and a
+side-by-side desktop keyboard; About, Saved Data, and metadata use Assessment 3
+copy. The About video placeholder remains. Previously downloaded or stored HTML
+must be regenerated to receive the new layout.
+
 ## Findings
 
-1. **Presentation polish recommended before recording:** the standalone Wordle
+1. **Resolved on `Polish`:** the original standalone Wordle
    board uses full-width square cells, making three-phoneme rows unusually tall.
    The 1280px screenshot is 2450px high and its keyboard is below the first
    screen. Gameplay works, but compact, responsive rows would improve usability
    and the demonstration. Inspect `frontend/lib/htmlGenerators.ts`, lines 43-44
-   and 86. The original screenshot is retained under `testing/evidence/final-review`.
-2. **Outdated assignment copy:** About, Saved Data, and metadata still refer to
+   and 86 at review time. The original screenshot is retained under
+   `testing/evidence/final-review`; current evidence is linked below.
+2. **Resolved on `Polish`:** About, Saved Data, and metadata previously referred to
    Assessment 2. Inspect `frontend/app/about/page.tsx`,
    `frontend/app/saved-data/page.tsx`, and `frontend/app/layout.tsx`. Refresh this
    text in the same presentation-polish stage without changing the user's
@@ -30,10 +37,10 @@ limitations are listed below; automated checks do not establish their absence.
 
 | Category | Weight | Verified evidence and remaining considerations |
 | --- | --- | --- |
-| Dashboard, reporting and generation | 6 | Database-backed dashboard, per-type report, source separation, alerts, and stored playable outputs for both games. Compact Wordle presentation remains recommended. |
+| Dashboard, reporting and generation | 6 | Database-backed dashboard, per-type report, source separation, alerts, and stored playable outputs for both games. Compact Wordle presentation is verified on desktop and mobile. |
 | Database persistence and stored activity data | 6 | Lists, phoneme arrays, hints, settings, activity configurations, usage events, and outputs persist through the API. Tests reload data and compare downloaded HTML byte-for-byte with stored content. |
 | Observability and statistics | 5 | Health, saved counts, visits, page-duration samples, most-used type/ties, generation events, and stored-output counts. Synthetic events are explicitly labelled and excluded from recorded metrics. Health is API liveness, not database readiness. |
-| Testing and accessibility | 4 | Current full suite: 20 Playwright tests passed in 17.2 seconds. Current-version JMeter smoke: 22 requests, zero failures. Retained staged load and 18 Lighthouse audits are available with stated limitations. |
+| Testing and accessibility | 4 | Polish full suite: 22 Playwright tests passed in 20.4 seconds. Final-review JMeter smoke: 22 requests, zero failures; it predates presentation polish. Retained load and Lighthouse evidence have stated limitations. |
 | Code quality and GitHub | 4 | Separate frontend/API, Prisma models, reusable client/data/game modules, scoped simulation transactions, tests, setup docs, and staged branches/merges. Show repository homepage and commits in the video; do not claim a mark for commit count alone. |
 
 ## Verification Details
@@ -77,7 +84,7 @@ maximum production capacity.
 
 ## Next Stage
 
-Use a separate `A3---Presentation-Polish` branch for the compact Wordle layout
-and Assessment 3 copy. Verify desktop/mobile layout and rerun the relevant tests
-before recording. Then follow `video-walkthrough.md` and the packaging checklist
-in `assignment-3-review.md`. User approval, commits, and merges remain user-owned.
+Presentation fixes are complete on `Polish`; see
+`../testing/lighthouse/evidence/presentation-polish.md` for current verification.
+After user approval and merge, follow `video-walkthrough.md` and the packaging
+checklist in `assignment-3-review.md`. Commits and merges remain user-owned.

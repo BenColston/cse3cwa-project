@@ -251,7 +251,7 @@ with `npm run test:e2e:report` from `frontend`.
 The requirement-by-requirement status and remaining work are documented in
 [docs/assignment-3-review.md](docs/assignment-3-review.md). The industry-source
 reference draft is in [docs/references.md](docs/references.md).
-The integrated review and outstanding presentation findings are in
+The integrated review and resolved presentation findings are in
 [docs/final-review.md](docs/final-review.md); a timed video script is in
 [docs/video-walkthrough.md](docs/video-walkthrough.md).
 
@@ -261,6 +261,9 @@ Dashboard verification is documented in
 [testing/lighthouse/evidence/dashboard-interface.md](testing/lighthouse/evidence/dashboard-interface.md).
 Simulation persistence, isolation, and cleanup evidence is in
 [testing/lighthouse/evidence/simulated-records.md](testing/lighthouse/evidence/simulated-records.md).
+Compact Wordle layout verification is in
+[testing/lighthouse/evidence/presentation-polish.md](testing/lighthouse/evidence/presentation-polish.md).
+Regenerate previously downloaded or stored Wordle HTML to receive the new layout.
 
 JMeter load-test setup, stage commands, and report guidance are in
 [testing/jmeter/README.md](testing/jmeter/README.md). Start with its one-user
@@ -272,7 +275,7 @@ smoke test before increasing the traffic level.
   student ID, working application, dashboard, data-driven features, alerts,
   reporting views, observability metrics, Playwright tests, JMeter results,
   Lighthouse results, and the GitHub homepage and commits.
-- Complete the remaining dashboard and reporting requirements before recording
-  the final walkthrough. Previously recorded test footage may still be useful.
+- Review and merge the approved work before recording the final walkthrough.
+  Previously recorded test footage may still be useful.
 - Submit the required AI acknowledgement using the LMS template and review the
   reference draft against the work actually used.
