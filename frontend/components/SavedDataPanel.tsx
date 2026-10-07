@@ -326,6 +326,7 @@ export function SavedDataPanel() {
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <h3 className="font-bold text-slate-950">{list.name}</h3>
+                      {list.simulationBatchId ? <p className="mt-1 text-sm font-semibold text-slate-700">Simulated demonstration record</p> : null}
                       <p className="mt-1 text-sm text-slate-600">
                         {list.words.length} words
                         {list.description ? ` | ${list.description}` : ""}
@@ -388,6 +389,7 @@ export function SavedDataPanel() {
                       <h3 className="font-bold text-slate-950">
                         {activity.name}
                       </h3>
+                      {activity.simulationBatchId ? <p className="mt-1 text-sm font-semibold text-slate-700">Simulated demonstration record</p> : null}
                       <p className="mt-1 text-sm text-slate-600">
                         {activity.type.replace("_", " ")} |{" "}
                         {activity.difficulty}

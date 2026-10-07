@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiMetrics, fetchApiHealth, fetchMetrics } from "@/lib/apiClient";
+import { SimulationControls } from "@/components/SimulationControls";
 
 const activityTypes = ["WORDLE", "WORD_SEARCH"] as const;
 const activityNames = { WORDLE: "Wordle", WORD_SEARCH: "Word Search" };
@@ -10,6 +11,8 @@ const number = (value: number) => value.toLocaleString("en-AU");
 
 export function Dashboard() {
   const [metrics, setMetrics] = useState<ApiMetrics | null>(null);
+  const [source, setSource] = useState<"recorded" | "simulated">("recorded");
+  const [simulationBusy, setSimulationBusy] = useState(false);
   const [health, setHealth] = useState<"checking" | "healthy" | "unavailable">("checking");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -22,11 +25,11 @@ export function Dashboard() {
     controller.current = request;
     const timeout = setTimeout(() => request.abort(), 10000);
     const [healthResult, metricsResult] = await Promise.allSettled([
-      fetchApiHealth(request.signal), fetchMetrics(request.signal),
+      fetchApiHealth(request.signal), fetchMetrics(request.signal, source),
     ]);
     clearTimeout(timeout);
     return { request, healthResult, metricsResult };
-  }, []);
+  }, [source]);
 
   const applyResults = useCallback(({ request, healthResult, metricsResult }: Awaited<ReturnType<typeof load>>) => {
     if (controller.current !== request) return;
@@ -75,7 +78,7 @@ export function Dashboard() {
           <h1 className="text-3xl font-bold text-slate-950">Dashboard</h1>
           <p className="mt-2 text-slate-600">Activity reporting</p>
         </div>
-        <button type="button" disabled={loading} onClick={() => {
+        <button type="button" disabled={loading || simulationBusy} onClick={() => {
           setLoading(true);
           setHealth("checking");
           void load().then(applyResults);
@@ -83,6 +86,18 @@ export function Dashboard() {
           {loading ? "Refreshing..." : "Refresh"}
         </button>
       </div>
+
+      <fieldset className="flex flex-wrap gap-4 border-b border-slate-200 py-4 text-sm text-slate-800">
+        <legend className="pt-4 font-semibold">Reporting data</legend>
+        {(["recorded", "simulated"] as const).map((value) => (
+          <label key={value} className="flex items-center gap-2">
+            <input type="radio" name="reporting-source" value={value} checked={source === value} disabled={loading || simulationBusy}
+              onChange={() => { setLoading(true); setHealth("checking"); setSource(value); }} />
+            {value === "recorded" ? "Recorded usage" : "Simulated demonstration"}
+          </label>
+        ))}
+      </fieldset>
+      {source === "simulated" ? <p className="border-b border-slate-200 py-3 text-sm font-semibold text-slate-800">Simulated data only. Sample outcomes are not actual activity generations or failures.</p> : null}
 
       <div role="status" className="flex flex-wrap justify-between gap-3 border-b border-slate-200 py-4 text-sm text-slate-700">
         <span>API health: <strong>{health === "checking" ? "Checking" : health === "healthy" ? "Healthy" : "Unavailable"}</strong></span>
@@ -97,7 +112,7 @@ export function Dashboard() {
       {metrics && !loading ? (
         <>
           <section aria-label="Operational alerts" className="border-b border-slate-200 py-4 text-slate-800">
-            {metrics.failedGenerations > 0 ? <p role="alert" className="border-l-4 border-amber-600 pl-3">{number(metrics.failedGenerations)} failed generation events recorded. Review the builder inputs and retry the affected activity.</p> : <p>No failed generation events recorded.</p>}
+            {metrics.failedGenerations > 0 ? <p role="alert" className="border-l-4 border-amber-600 pl-3">{source === "simulated" ? "Simulated warning: " : ""}{number(metrics.failedGenerations)} failed generation events recorded. {source === "simulated" ? "Demonstration only; no real failure occurred." : "Review the builder inputs and retry the affected activity."}</p> : <p>No failed generation events recorded.</p>}
             {metrics.wordLists === 0 ? <p className="mt-2">No saved word lists. <Link href="/saved-data" className="font-semibold text-teal-700 underline">Create a word list</Link></p> : null}
             {metrics.activitiesCreated === 0 ? <p className="mt-2">No saved activity configurations.</p> : null}
           </section>
@@ -142,6 +157,17 @@ export function Dashboard() {
           </section>
         </>
       ) : null}
+      <SimulationControls available={metrics ? metrics.simulationAvailable ?? false : null} disabled={loading || !metrics}
+        onBusyChange={setSimulationBusy}
+        onChanged={async (created) => {
+          setLoading(true);
+          setHealth("checking");
+          if (created && source !== "simulated") {
+            setSource("simulated");
+          } else {
+            applyResults(await load());
+          }
+        }} />
     </div>
   );
 }

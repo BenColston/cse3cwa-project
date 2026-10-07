@@ -27,16 +27,19 @@ enum UsageEventType {
 }
 
 model WordList {
-  id          String           @id @default(cuid())
-  name        String
-  description String?
-  source      String?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  words       WordEntry[]
-  activities  ActivityConfig[]
+  id                String           @id @default(cuid())
+  name              String
+  description       String?
+  source            String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  words             WordEntry[]
+  activities        ActivityConfig[]
+  simulationBatchId String?
+  simulationBatch   SimulationBatch? @relation(fields: [simulationBatchId], references: [id], onDelete: Cascade)
 
   @@index([name])
+  @@index([simulationBatchId])
 }
 
 model WordEntry {
@@ -55,19 +58,22 @@ model WordEntry {
 }
 
 model ActivityConfig {
-  id               String            @id @default(cuid())
-  name             String
-  type             ActivityType
-  difficulty       DifficultyLevel   @default(MEDIUM)
-  settings         Json
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  wordListId       String
-  wordList         WordList          @relation(fields: [wordListId], references: [id], onDelete: Cascade)
-  generatedOutputs GeneratedOutput[]
+  id                String            @id @default(cuid())
+  name              String
+  type              ActivityType
+  difficulty        DifficultyLevel   @default(MEDIUM)
+  settings          Json
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  wordListId        String
+  wordList          WordList          @relation(fields: [wordListId], references: [id], onDelete: Cascade)
+  generatedOutputs  GeneratedOutput[]
+  simulationBatchId String?
+  simulationBatch   SimulationBatch?  @relation(fields: [simulationBatchId], references: [id], onDelete: Cascade)
 
   @@index([type])
   @@index([wordListId])
+  @@index([simulationBatchId])
 }
 
 model GeneratedOutput {
@@ -82,12 +88,23 @@ model GeneratedOutput {
 }
 
 model UsageEvent {
-  id           String         @id @default(cuid())
-  eventType    UsageEventType
-  activityType ActivityType?
-  durationMs   Int?
-  createdAt    DateTime       @default(now())
+  id                String           @id @default(cuid())
+  eventType         UsageEventType
+  activityType      ActivityType?
+  durationMs        Int?
+  createdAt         DateTime         @default(now())
+  simulationBatchId String?
+  simulationBatch   SimulationBatch? @relation(fields: [simulationBatchId], references: [id], onDelete: Cascade)
 
   @@index([eventType, createdAt])
   @@index([activityType, eventType])
+  @@index([simulationBatchId])
+}
+
+model SimulationBatch {
+  id         String           @id
+  createdAt  DateTime         @default(now())
+  wordLists  WordList[]
+  activities ActivityConfig[]
+  events     UsageEvent[]
 }

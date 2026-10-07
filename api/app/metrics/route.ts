@@ -1,8 +1,13 @@
-import { jsonResponse, serverErrorResponse } from "@/lib/apiResponses";
+import { errorResponse, jsonResponse, serverErrorResponse } from "@/lib/apiResponses";
 import { prisma } from "@/lib/prisma";
 import { ActivityType, UsageEventType } from "@prisma/client";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const source = new URL(request.url).searchParams.get("source") ?? "recorded";
+  if (source !== "recorded" && source !== "simulated") {
+    return errorResponse("Metrics source must be recorded or simulated.");
+  }
+  const filter = { simulationBatchId: source === "simulated" ? { not: null } : null };
   try {
     const [
       wordLists,
@@ -12,21 +17,24 @@ export async function GET() {
       failedGenerations,
       pageDuration,
       activityUsage,
+      simulationAvailable,
     ] = await Promise.all([
-      prisma.wordList.count(),
+      prisma.wordList.count({ where: filter }),
       prisma.activityConfig.groupBy({
+        where: filter,
         by: ["type"],
         _count: { _all: true },
       }),
-      prisma.generatedOutput.count(),
+      prisma.generatedOutput.count({ where: { activity: filter } }),
       prisma.usageEvent.count({
-        where: { eventType: UsageEventType.GENERATION_SUCCEEDED },
+        where: { ...filter, eventType: UsageEventType.GENERATION_SUCCEEDED },
       }),
       prisma.usageEvent.count({
-        where: { eventType: UsageEventType.GENERATION_FAILED },
+        where: { ...filter, eventType: UsageEventType.GENERATION_FAILED },
       }),
       prisma.usageEvent.aggregate({
         where: {
+          ...filter,
           eventType: UsageEventType.PAGE_VIEW,
           durationMs: { not: null },
         },
@@ -36,11 +44,13 @@ export async function GET() {
       prisma.usageEvent.groupBy({
         by: ["activityType"],
         where: {
+          ...filter,
           eventType: UsageEventType.ACTIVITY_USED,
           activityType: { not: null },
         },
         _count: { _all: true },
       }),
+      prisma.simulationBatch.count(),
     ]);
 
     const usageByType = activityUsage
@@ -60,6 +70,8 @@ export async function GET() {
     );
 
     return jsonResponse({
+      source,
+      simulationAvailable: simulationAvailable > 0,
       wordLists,
       activitiesCreated: activitiesByType.reduce(
         (total, activity) => total + activity._count._all,
