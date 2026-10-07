@@ -54,7 +54,7 @@ await new Promise((resolve, reject) => {
 });
 const fixtureUrl = `http://127.0.0.1:${server.address().port}`;
 const targets = [
-  ...["home", "about", "wordle", "word-search", "saved-data", "settings"].map((name) => ({
+  ...["home", "about", "dashboard", "wordle", "word-search", "saved-data", "settings"].map((name) => ({
     name, url: name === "home" ? baseUrl : `${baseUrl}/${name}`,
   })),
   ...["wordle", "word-search"].map((name) => ({ name: `generated-${name}`, url: `${fixtureUrl}/${name}.html` })),

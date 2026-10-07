@@ -32,7 +32,7 @@ events in the dashboard; these are not mocked or removed.
 
 ## Scope and Evidence
 
-- Home, About, Wordle, Word Search, Saved Data, and Settings.
+- Home, About, Dashboard, Wordle, Word Search, Saved Data, and Settings.
 - Both freshly generated standalone activities.
 - Desktop preset and default mobile emulation, in fresh light-theme sessions.
 - Accessibility category only, not performance or load testing.

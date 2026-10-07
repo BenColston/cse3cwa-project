@@ -2,7 +2,10 @@
 
 Reviewed 7 October 2026 against the supplied Assessment 3 brief and the existing
 repository. This is a working checklist, not a completed submission declaration.
-The detailed Assessment 3 marking rubric was not available for this review.
+The subsequently supplied Assessment 3 rubric weights dashboard/reporting at
+6 marks, persistence at 6, observability at 5, testing/accessibility at 4, and
+code quality/GitHub at 4 (25 total). Dashboard-stage updates below reflect the
+implemented interface; this checklist is not a predicted grade.
 
 ## Requirement Status
 
@@ -10,30 +13,31 @@ The detailed Assessment 3 marking rubric was not available for this review.
 | --- | --- | --- |
 | Extend the existing Next.js builder | Implemented | Separate Next.js frontend and API services continue the earlier project. |
 | Store and retrieve phoneme content and activity settings | Implemented | Prisma models, Postgres persistence, CRUD routes, Saved Data, and builder save/load workflows. |
-| Database-backed operational statistics | Implemented backend; partial overall | `UsageEvent`, `/metrics/events`, and `/metrics` exist. The frontend records usage, duration, and generation outcomes, but has no metrics reporting view. |
-| Data-driven dashboard interface | Missing | No dashboard route or interface presents the required summaries and operational statistics. |
+| Database-backed operational statistics | Implemented | `UsageEvent`, `/metrics/events`, and `/metrics` feed the dashboard's usage, duration, and generation summaries. |
+| Data-driven dashboard interface | Implemented; final demonstration pending | `/dashboard` presents stored totals, per-type saved configurations and builder visits, generation outcomes, page-time samples, and health. |
 | Simulated input records | Partial | Automated tests create temporary records, but there is no repeatable, labelled demonstration-data workflow for dashboard reporting. |
-| Visible operational indicators and alerts | Partial | Saved Data shows connection status and builders show validation errors. Dashboard health, failed-generation, empty-data, and reporting indicators remain to be added. |
-| Reporting views | Missing | Saved Data displays stored content, but does not present operational metrics or reporting summaries. A dashboard may contain these views; a separate reporting product is unnecessary. |
+| Visible operational indicators and alerts | Implemented; demonstration data pending | Dashboard shows separate health/metrics status, failed-generation warnings, empty-data states, and request errors. Simulated records will support a repeatable demonstration. |
+| Reporting views | Implemented | Dashboard activity table compares current configurations and recorded builder visits, reports the most-used type (including ties), and links to saved data/outputs and builders. |
 | `/health` returns 200 | Verified live | Returned 200 with `status: ok`. This checks API liveness, not database readiness. |
-| Playwright builder and generated-output use cases | Existing evidence | CRUD and standalone activity coverage plus word-search keyboard and duplicate-instance drag tests. Last implementation-stage run: 10 passed. Not rerun during this documentation review. |
+| Playwright builder and generated-output use cases | Verified in dashboard stage | Full suite: 15 passed, including CRUD, standalone activity, word-search interactions, and five new dashboard tests. |
 | Staged JMeter workflow testing and interpretation | Existing evidence | 1, 10, 100, 1,000, and 10,000 configured-user stages retained under `testing/jmeter/evidence`. The highest stage had timeouts and must not be described as a pass. |
-| Lighthouse results and resulting design changes | Existing evidence | Baseline, improved, and keyboard-stage reports retained under `testing/lighthouse/evidence`; final 16 audits scored 100 for automated accessibility. Manual limitations remain documented. |
-| Final 3-8 minute video covering all requested features | User verification needed | Test footage has been recorded, but final coverage cannot yet demonstrate the missing dashboard and reporting features. |
+| Lighthouse results and resulting design changes | Existing and dashboard-stage evidence | Baseline, improved, keyboard, and dashboard reports retained under `testing/lighthouse/evidence`; dashboard desktop/mobile audits scored 100. Manual limitations remain documented. |
+| Final 3-8 minute video covering all requested features | User verification needed | Test footage has been recorded; final coverage must include the new dashboard/reporting interface and simulated-data workflow. |
 | Code ZIP and repository link | Pending packaging | Repository link is in the root README. No submission ZIP was produced in this review. |
 | At least five sources in APA 7 style | Draft prepared | See `references.md`; review relevance and include the references in the submission format accepted by the coordinator. |
 | AI acknowledgement | User action | Complete the official LMS form. No completed acknowledgement was verified in the repository. |
 
-Live checks during this review returned 200 for the frontend, `/health`, and
-`/metrics`; `/dashboard` returned 404. Successful health and metrics responses
-alone do not satisfy the dashboard requirement.
+The original review returned 200 for the frontend, `/health`, and `/metrics`,
+but 404 for `/dashboard`. The subsequent dashboard branch implements that route
+and includes a live database-backed browser test, in addition to controlled
+responses for failure and empty-data coverage. Successful endpoint responses
+alone do not establish database readiness or full requirement compliance.
 
 ## Next Implementation Steps
 
-1. On a new dashboard branch, add frontend metrics access and a dashboard showing
-   stored lists/configurations, API health, per-type configuration counts, usage,
-   average recorded page time, generated outputs, and generation outcomes.
-   Include loading, unavailable, and empty states and appropriate alerts.
+1. Review and approve the dashboard branch: metrics access, reporting, independent
+   health indicators, per-type counts, usage, durations, output totals, alerts,
+   loading/unavailable/empty states, and responsive light/dark layouts.
 2. On a separate simulation branch, add repeatable, clearly labelled sample
    records for both activity types, phoneme arrays, settings, hints, and usage
    events. Keep simulated failures distinguishable from observed failures and

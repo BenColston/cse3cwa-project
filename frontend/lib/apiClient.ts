@@ -92,6 +92,19 @@ export type UsageEventPayload = {
   durationMs?: number;
 };
 
+export type ApiMetrics = {
+  wordLists: number;
+  activitiesCreated: number;
+  activitiesCreatedByType: Record<ApiActivityConfig["type"], number>;
+  activityUsageByType: { type: ApiActivityConfig["type"]; count: number }[];
+  mostUsedActivityType: ApiActivityConfig["type"] | null;
+  successfulGenerations: number;
+  failedGenerations: number;
+  totalGeneratedOutputs: number;
+  averageTimeOnPageMs: number;
+  pagesMeasured: number;
+};
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4080";
 
@@ -109,8 +122,10 @@ async function errorMessageFor(response: Response) {
   return `Request failed with status ${response.status}`;
 }
 
-async function fetchJson<T>(path: string): Promise<T> {
+async function fetchJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
+    signal,
+    cache: "no-store",
     headers: {
       Accept: "application/json",
     },
@@ -150,6 +165,18 @@ async function sendJson<T>(
 
 export function getApiBaseUrl() {
   return API_BASE_URL;
+}
+
+export function fetchMetrics(signal?: AbortSignal) {
+  return fetchJson<ApiMetrics>("/metrics", signal);
+}
+
+export async function fetchApiHealth(signal?: AbortSignal) {
+  const health = await fetchJson<{ status: string; service: string }>("/health", signal);
+  if (health.status !== "ok") {
+    throw new Error("API health check did not report ok.");
+  }
+  return health;
 }
 
 export async function recordUsageEvent(
